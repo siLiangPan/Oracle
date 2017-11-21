@@ -1,0 +1,79 @@
+Performing Complete Database Recovery
+https://docs.oracle.com/cd/E11882_01/backup.112/e10642/rcmcomre.htm#BRADV8005
+
+#=====================================
+# 为完全数据库恢复做准备
+#=====================================
+Preparing for Complete Database Recovery
+1. Identifying the Database Files to Restore or Recover
+Identifying a Lost Control File
+	$ rman target / nocatalog
+	RMAN> shutdown immediate; 
+	以安装方式启动数据库
+	RMAN> startup nomount;
+	恢复控制文件
+	RMAN> restore controlfile from '/phybackup01/rman/dbfull_852773658_33952_1';
+	RMAN> restore controlfile to '/data/db_rman2/control01.ctl' from '/doc/db_rman_02qvfs61_1_1';
+	RMAN> restore controlfile from autobackup;
+	RMAN> alter database mount;
+Identifying Datafiles Requiring Media Recovery
+Identifying Datafiles with RMAN
+	RMAN> VALIDATE DATABASE;
+	RMAN> REPORT SCHEMA;
+Identifying Datafiles with SQL
+
+2. Determining the DBID of the Database
+3. Previewing Backups Used in Restore Operations
+RESTORE DATABASE PREVIEW;
+RESTORE ARCHIVELOG FROM TIME 'SYSDATE-7' PREVIEW;
+4. Validating Backups Before Restoring Them
+RESTORE ... VALIDATE tests whether RMAN can restore a specific object from a backup. RMAN chooses which backups to use.
+VALIDATE BACKUPSET tests the validity of a backup set that you specify.
+5. Restoring Archived Redo Logs Needed for Recovery
+RUN
+{ 
+  SET ARCHIVELOG DESTINATION TO '/oracle/temp_restore';
+  RESTORE DATABASE;
+  RECOVER DATABASE; # restores and recovers logs automatically
+}
+
+
+#=====================================
+# 执行完全数据库恢复
+#=====================================
+Performing Complete Database Recovery
+Performing Complete Recovery of the Whole Database
+To restore and recover the whole database:
+1. Start RMAN and connect to a target database.
+% rman
+RMAN> CONNECT TARGET /
+
+2. If the database is not mounted, then mount but do not open the database.
+STARTUP MOUNT;
+
+3. Use the SHOW command to see which channels are preconfigured.
+SHOW ALL;
+
+4. If restoring password-protected encrypted backups, then specify the password.
+SET DECRYPTION IDENTIFIED BY password;
+
+5. Restore and recover the database. Do one of the following:
+RMAN> RESTORE DATABASE;
+RMAN> RECOVER DATABASE;
+
+RUN
+{  
+  SET NEWNAME FOR DATAFILE 2 TO '/disk2/df2.dbf';
+  SET NEWNAME FOR DATAFILE 3 TO '/disk2/df3.dbf';
+  SET NEWNAME FOR DATAFILE 4 TO '/disk2/df4.dbf';
+  RESTORE DATABASE;
+  SWITCH DATAFILE ALL;
+  RECOVER DATABASE;
+}
+
+6. Examine the output to see if media recovery was successful. If so, open the database.
+ALTER DATABASE OPEN;
+
+
+
+

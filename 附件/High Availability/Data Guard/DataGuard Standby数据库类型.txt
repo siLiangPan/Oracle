@@ -1,0 +1,99 @@
+DataGuard Standby数据库类型
+http://blog.csdn.net/vindak/article/details/18985209
+
+DG Standby数据库类型
+================
+
+分为三类：物理Standby、逻辑Standby和快照standby
+
+1．物理Standby
+
+    物理Standby与Primary数据库完全一模一样，在物理数据库磁盘上具有主库相同架构的块，通过REDO应用（属于块对块的应用）来维护物理Standby数据库。
+
+    通常在物理Standby没有执行REDO应用操作的时候，可以将物理Standby数据库以READ ONLY模式打开，如果数据库中指定了Flashback Area的话，甚至还可以被临时性的置为READ WRITE模式，操作完之后再通过Flashback Database特性恢复回READ WRITE前的状态，以便继续接收Primary端发送的REDO并应用。
+
+    物理Standby通过REDO应用来保持与Primary数据库的一致性，所谓的REDO应用，实质是通过Oracle的恢复机制，应用归档文件（或Standby Redo logs文件）中的REDO数据。恢复操作属于块对块的应用。如果正在执行REDO应用的操作，Oracle数据库就不能被Open。
+
+    Oracle 11g版本中增强物理Standby的应用功能，在11g版本中，物理Standby可以在OPEN READ ONLY模式下继续接收和应用primaru库产生的REDO数据，这就极大地提升了物理Standby数据库的应用场合。
+
+    如果以READ WRITE模式打开，那么Standby数据库将暂停从Primary数据库接收REDO数据，并且暂时失去灾难保护的功能。可用于需要临时调试一些数据，但又不方便在正式库中操作时，就可以临时将Standby数据库置为READ WRITE模式，操作完之后将数据库闪回到操作前的状态（闪回之后，Data Guard会自动同步，不需要重建物理Standby，注意：如果没有启动闪回，那就回不到READ WRITE前的状态了）。
+
+
+物理Standby特点如下：
+（1）灾难恢复及高可用性：提供了一个健全、高效的灾难恢复，以及高可用性的解决方案。更加易于管理switchover/failover角色转换及在更短的计划内或计划外停机时间。
+（2）数据保护：物理Standby DG能够确保即使面对无法预料的灾害也能够不丢失数据。前面也提到物理Standby是基于块对块的复制，因此与对象、语句无关，Primary数据库上有什么，物理Standby数据库端也会有什么。
+（3）分担Primary数据库压力：通过将一些备份任务、仅查询的需求转移到物理Standby数据库，可以有效节省Primary数据库的CPU及I/O资源。
+（4）提升性能：物理Standby所使用的REDO应用技术使用最底层的恢复机制，这种机制能够绕过SQL级代码层，因此效率最高。
+
+
+2．逻辑Standby
+
+    逻辑Standby也要通过Primary数据库（或其备份，或其复制库，如物理Standby）创建，因此在创建之初与物理Standby数据库类似。不过由于逻辑Standby通过SQL应用的方式应用REDO数据，因此逻辑Standby的物理文件结构，甚至数据的逻辑结构都可以与Primary不一致。
+
+    逻辑Standby正常情况下是以READ WRITE模式打开，用户可以在任何时候访问逻辑Standby数据库，就是说逻辑Standby是在OPEN状态执行SQL应用。
+
+    由于SQL应用的自身特点，逻辑Standby对于某些数据类型及一些DDL/DML语句会有操作上的限制。可以在视图DBA_LOGSTDBY_UNSUPPORTED 中查看不支持的数据类型，如果使用了这种数据类型，则不能保证数据库完全一致。
+
+
+逻辑Standby有下列一些特点：
+
+除了上述物理Standby中提到的类似灾难恢复、高可用性及数据保护等特点之外还有：
+
+（1）有效地利用备机的硬件资源：除灾难恢复外，逻辑Standby数据库还可用于其他业务需求。如通过在Standby数据库创建额外的索引、物化视图等提高查询性能并满足特定业务需要；又如创建新的SCHEMA（该SCHEMA在Primary数据库端并不存在），然后在这些SCHEMA中执行那些不适于在Primary数据库端执行的DDL或者DML操作等。
+（2）分担Primary数据库压力：逻辑Standby数据库是在READ WRITE模式打开状态做同步的，这使得逻辑Standby数据库能够同时用于数据保护和报表操作，从而将主数据库从报表和查询任务中解脱出来，节约宝贵的 CPU和I/O资源。
+（3）平滑升级：可以通过逻辑Standby来实现如跨平台、跨版本升级，为数据库打补丁等操作。
+
+
+
+3.快照standby
+ 
+
+    11g Dataguard Snapshot Standby数据库功能，可将备库置于打开读写状态，进行模拟生产环境主库中测试。当备库Snapshot standby任务完成后，可以切换回物理备库角色。在Snapshot Standby数据库状态下，备库是可以接受主库传过来的日志，但是不能够将Redo内容应用到备库中。等到从Snapshot Standby库切回到物理备库的状态下，才应用redo日志，从而实现主库和备库的数据一致性。
+
+   Snapshot standby被使用在需要一个临时可更新物理standby的快照的场景，注意因为redo数据只会被快照standby数据库接收但是不会被应用，直到被转化为一个物理standby数据库，而从一个主库恢复的故障时间和需要被应用的redo数据的数据量成正比。
+
+    值得一提的是这个功能不需要开启主备库的闪回数据库功能，先前在这里存在误区,这个功能还是比较赞的，可以直接拿物理备库做下临时测试数据库！
+	
+	
+在备库mounted状态上：
+SQL> alter database recover managed standby database cancel;   ////取消Standby库的Redo应用
+Database altered.  
+ 
+SQL> select open_mode,database_role,db_unique_name,flashback_on from v$database;  
+ 
+OPEN_MODE            DATABASE_ROLE    DB_UNIQUE_NAME       FLASHBACK_ON  
+-------------------- ---------------- -------------------- ------------------  
+READ ONLY            PHYSICAL STANDBY dg2                  NO  
+ 
+SQL> shutdown immediate 
+
+SQL> startup mount
+
+SQL> alter database convert to snapshot standby ;
+
+SQL> select open_mode,database_role,db_unique_name,flashback_on from v$database;
+ 
+OPEN_MODE   DATABASE_ROLE        DB_UNIQUE_NAME    FLASHBACK_ON
+----------- -------------------- ----------------- --------------------------
+MOUNTED     SNAPSHOT STANDBY     dg2               RESTORE POINT ONLY
+ 
+SQL> alter database open;  
+
+
+
+然后就可以对快照数据库进行写数据操作，查看快照数据库，已经多了一个incarnation，日志序列号从1开始：
+[oracle@dg2 ~]$ rman target /  
+Recovery Manager: Release 11.2.0.3.0 - Production on Sat May 5 15:35:43 2012  
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.  
+connected to target database: DG (DBID=1694605607)  
+ 
+RMAN> list incarnation;  
+ 
+using target database control file instead of recovery catalog  
+ 
+List of Database Incarnations  
+DB Key  Inc Key DB Name  DB ID            STATUS  Reset SCN  Reset Time  
+------- ------- -------- ---------------- --- ---------- ----------  
+1       1       DG       1694605607       PARENT  1          2011-09-17-09:46:04  
+2       2       DG       1694605607       PARENT  995548     2012-04-22-12:43:25  
+3       3       DG       1694605607       CURRENT 1107152    2012-05-05-15:20:09 	

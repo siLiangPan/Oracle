@@ -1,0 +1,195 @@
+#=====================================
+# 准备主库
+#=====================================
+Preparing the Primary Database for Standby Database Creation
+1. Enable Forced Logging
+2. Configure Redo Transport Authentication
+3. Configure the Primary Database to Receive Redo Data
+4. Set Primary Database Initialization Parameters
+5. Enable Archiving
+
+1. Enable Forced Logging
+SQL> ALTER DATABASE FORCE LOGGING;
+
+2. Configure Redo Transport Authentication
+These redo transport sessions are authenticated using either the Secure Sockets Layer (SSL) protocol or a remote login password file.
+
+在linux环境中只能su - oracle，切换到oracle用户，然后orapwd重建口令文件： 
+orapwd file=orapwORCL password=orclsys entries=2
+
+3. Configure the Primary Database to Receive Redo Data
+6.2.3 Configuring an Oracle Database to Receive Redo Data
+6.2.3.1 Creating and Managing a Standby Redo Log
+SQL> SELECT GROUP#, BYTES FROM V$LOG;
+SQL> SELECT GROUP#, BYTES FROM V$STANDBY_LOG;
+------ standby redo log = redo log + 1
+SQL> ALTER DATABASE ADD STANDBY LOGFILE ('/oracle/dbs/slog1.rdo') SIZE 500M;
+SQL> ALTER DATABASE ADD STANDBY LOGFILE ('/oracle/dbs/slog2.rdo') SIZE 500M;
+SQL> ALTER DATABASE ADD STANDBY LOGFILE ('/oracle/dbs/slog3.rdo') SIZE 500M;
+------
+SQL> ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 SIZE 500M;
+SQL> ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 SIZE 500M;
+SQL> ALTER DATABASE ADD STANDBY LOGFILE THREAD 1 SIZE 500M;
+SQL> ALTER DATABASE ADD STANDBY LOGFILE THREAD 2 SIZE 500M;
+SQL> ALTER DATABASE ADD STANDBY LOGFILE THREAD 2 SIZE 500M;
+SQL> ALTER DATABASE ADD STANDBY LOGFILE THREAD 2 SIZE 500M;
+
+6.2.3.2 Configuring Standby Redo Log Archival
+6.2.3.2.1 Enable Archiving
+6.2.3.2.2 Standby Redo Log Archival to a fast recovery area
+6.2.3.2.3 Standby Redo Log Archival to a Local FIle System Location
+6.2.3.3 Cases Where Redo Is Written Directly To an Archived Redo Log File
+
+
+4. Set Primary Database Initialization Parameters
+Primary Database: Primary Role Initialization Parameters
+=========================================================
+DB_NAME=chicago
+DB_UNIQUE_NAME=chicago
+LOG_ARCHIVE_CONFIG='DG_CONFIG=(chicago,boston)'
+CONTROL_FILES='/arch1/chicago/control1.ctl', '/arch2/chicago/control2.ctl'
+LOG_ARCHIVE_DEST_1=
+ 'LOCATION=/arch1/chicago/ 
+  VALID_FOR=(ALL_LOGFILES,ALL_ROLES)
+  DB_UNIQUE_NAME=chicago'
+LOG_ARCHIVE_DEST_2=
+ 'SERVICE=boston ASYNC
+  VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) 
+  DB_UNIQUE_NAME=boston'
+LOG_ARCHIVE_DEST_STATE_1=ENABLE
+LOG_ARCHIVE_DEST_STATE_2=ENABLE
+REMOTE_LOGIN_PASSWORDFILE=EXCLUSIVE
+LOG_ARCHIVE_FORMAT=%t_%s_%r.arc
+=========================================================
+
+Primary Database: Standby Role Initialization Parameters
+=========================================================
+FAL_SERVER=boston
+DB_FILE_NAME_CONVERT='boston','chicago'
+LOG_FILE_NAME_CONVERT=
+ '/arch1/boston/','/arch1/chicago/','/arch2/boston/','/arch2/chicago/' 
+STANDBY_FILE_MANAGEMENT=AUTO
+=========================================================
+
+5. Enable Archiving
+SQL> SHUTDOWN IMMEDIATE;
+SQL> STARTUP MOUNT;
+SQL> ALTER DATABASE ARCHIVELOG;
+SQL> ALTER DATABASE OPEN;
+SQL> archive log list
+
+#=====================================
+# 主库准备完毕，开始创建物理备库
+#=====================================
+Creating a Physical Standby Database
+1. Create a Backup Copy of the Primary Database Datafiles		Primary
+2. Create a Control File for the Standby Database				Primary
+3. Create a Parameter File for the Standby Database				Primary
+4. Copy Files from the Primary System to the Standby System		Primary
+5. Set Up the Environment to Support the Standby Database		Standby
+6. Start the Physical Standby Database							Standby
+7. Verify the Physical Standby Database Is Performing Properly	Standby
+
+
+1. Create a Backup Copy of the Primary Database Datafiles		Primary
+
+2. Create a Control File for the Standby Database				Primary
+SQL> STARTUP MOUNT;
+SQL> ALTER DATABASE CREATE STANDBY CONTROLFILE AS '/tmp/boston.ctl';
+SQL> ALTER DATABASE OPEN;
+
+
+3. Create a Parameter File for the Standby Database				Primary
+SQL> CREATE PFILE='/tmp/initboston.ora' FROM SPFILE;
+
+Modifying Initialization Parameters for a Physical Standby Database
+======================================================================
+.
+.
+.
+DB_NAME=chicago
+DB_UNIQUE_NAME=boston
+LOG_ARCHIVE_CONFIG='DG_CONFIG=(chicago,boston)'
+CONTROL_FILES='/arch1/boston/control1.ctl', '/arch2/boston/control2.ctl'
+DB_FILE_NAME_CONVERT='chicago','boston'
+LOG_FILE_NAME_CONVERT=
+ '/arch1/chicago/','/arch1/boston/','/arch2/chicago/','/arch2/boston/'
+LOG_ARCHIVE_FORMAT=log%t_%s_%r.arc
+LOG_ARCHIVE_DEST_1=
+ 'LOCATION=/arch1/boston/
+  VALID_FOR=(ALL_LOGFILES,ALL_ROLES) 
+  DB_UNIQUE_NAME=boston'
+LOG_ARCHIVE_DEST_2=
+ 'SERVICE=chicago ASYNC
+  VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) 
+  DB_UNIQUE_NAME=chicago'
+LOG_ARCHIVE_DEST_STATE_1=ENABLE
+LOG_ARCHIVE_DEST_STATE_2=ENABLE
+REMOTE_LOGIN_PASSWORDFILE=EXCLUSIVE
+STANDBY_FILE_MANAGEMENT=AUTO
+FAL_SERVER=chicago
+.
+.
+.
+======================================================================
+
+4. Copy Files from the Primary System to the Standby System		Primary
+Backup datafiles
+Standby control file
+Initialization parameter file
+
+
+5. Set Up the Environment to Support the Standby Database		Standby
+Step 2   Copy the remote login password file from the primary database system to the standby database system	### 密码文件 
+Step 3   Configure listeners for the primary and standby databases.												### 监听文件 listener.ora 重启监听服务
+% lsnrctl stop
+% lsnrctl start
+Step 4   Create Oracle Net service names.																		### tnsnames.ora
+Step 5   Create a server parameter file for the standby database.												### spfile
+SQL> CREATE SPFILE FROM PFILE='initboston.ora';
+Step 6   Copy the primary database encryption wallet to the standby database system								### 没有加密钱包可不做
+
+
+6. Start the Physical Standby Database							Standby
+Step 1   Start the physical standby database.
+SQL> STARTUP MOUNT;
+Step 2   Prepare the Standby Database to Receive Redo Data		### standby redo log
+Step 3   Create an Online Redo Log on the Standby Database		### 可选，支持备库快速切换为主库
+Step 4   Start Redo Apply.
+SQL> ALTER DATABASE RECOVER MANAGED STANDBY DATABASE USING CURRENT LOGFILE DISCONNECT FROM SESSION;
+
+
+
+7. Verify the Physical Standby Database Is Performing Properly	Standby
+Step 1   Identify the existing archived redo log files.#standby 
+SQL> SELECT SEQUENCE#, FIRST_TIME, NEXT_TIME FROM V$ARCHIVED_LOG ORDER BY SEQUENCE#;
+ SEQUENCE# FIRST_TIME         NEXT_TIME
+---------- ------------------ ------------------
+         8 11-JUL-07 17:50:45 11-JUL-07 17:50:53
+         9 11-JUL-07 17:50:53 11-JUL-07 17:50:58
+        10 11-JUL-07 17:50:58 11-JUL-07 17:51:03
+
+3 rows selected.
+Step 2   Force a log switch to archive the current online redo log file.#primary 
+SQL> ALTER SYSTEM SWITCH LOGFILE;
+Step 3   Verify the new redo data was archived on the standby database.#standby 
+SQL> SELECT SEQUENCE#, FIRST_TIME, NEXT_TIME FROM V$ARCHIVED_LOG ORDER BY SEQUENCE#;
+ SEQUENCE# FIRST_TIME         NEXT_TIME
+---------- ------------------ ------------------
+         8 11-JUL-07 17:50:45 11-JUL-07 17:50:53
+         9 11-JUL-07 17:50:53 11-JUL-07 17:50:58
+        10 11-JUL-07 17:50:58 11-JUL-07 17:51:03
+        11 11-JUL-07 17:51:03 11-JUL-07 18:34:11
+4 rows selected.
+
+Step 4   Verify that received redo has been applied.#standby 
+SQL> SELECT SEQUENCE#,APPLIED FROM V$ARCHIVED_LOG ORDER BY SEQUENCE#;
+SEQUENCE# APP
+--------- ---
+        8 YES
+        9 YES
+       10 YES
+       11 IN-MEMORY
+4 rows selected.
+
+
