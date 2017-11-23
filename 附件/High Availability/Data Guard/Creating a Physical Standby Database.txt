@@ -1,3 +1,6 @@
+﻿Creating a Physical Standby Database
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/create_ps.htm#SBYDB00200
+
 #=====================================
 # 准备主库
 #=====================================

@@ -1,0 +1,117 @@
+Creating a Logical Standby Database
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/create_ls.htm#SBYDB00300
+
+#=====================================
+# 前提条件
+#=====================================
+Prerequisite Conditions for Creating a Logical Standby Database
+
+1. Determine Support for Data Types and Storage Attributes for Tables
+Data Type and DDL Support on a Logical Standby Database
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/data_support.htm#SBYDB00305
+
+2. Ensure Table Rows in the Primary Database Can Be Uniquely Identified
+Step 1   Find tables without unique logical identifier in the primary database.
+SELECT OWNER, TABLE_NAME FROM DBA_LOGSTDBY_NOT_UNIQUE
+WHERE (OWNER, TABLE_NAME) NOT IN 
+(SELECT DISTINCT OWNER, TABLE_NAME FROM DBA_LOGSTDBY_UNSUPPORTED) 
+AND BAD_COLUMN = 'Y';
+
+Step 2   Add a disabled primary-key RELY constraint.
+SQL> ALTER TABLE mytab ADD PRIMARY KEY (id, name) RELY DISABLE;
+
+
+#=====================================
+# 一步一步创建逻辑备用数据库
+#=====================================
+Step-by-Step Instructions for Creating a Logical Standby Database
+1. Create a Physical Standby Database										Primary
+2. Stop Redo Apply on the Physical Standby Database							Standby
+3. Prepare the Primary Database to Support a Logical Standby Database		Primary
+4. Transition to a Logical Standby Database									Standby
+5. Open the Logical Standby Database										Standby
+6. Verify the Logical Standby Database Is Performing Properly				Standby
+
+
+1. Create a Physical Standby Database										Primary
+参照《Creating a Physical Standby Database.txt》
+
+2. Stop Redo Apply on the Physical Standby Database							Standby
+SQL> ALTER DATABASE RECOVER MANAGED STANDBY DATABASE CANCEL;
+
+3. Prepare the Primary Database to Support a Logical Standby Database		Primary
+4.2.3.1 Prepare the Primary Database for Role Transitions
+----- Primary Database: Logical Standby Role Initialization Parameters
+=========================================================
+LOG_ARCHIVE_DEST_1=
+ 'LOCATION=/arch1/chicago/ 
+  VALID_FOR=(ONLINE_LOGFILES,ALL_ROLES)
+  DB_UNIQUE_NAME=chicago'
+LOG_ARCHIVE_DEST_3=
+ 'LOCATION=/arch2/chicago/
+  VALID_FOR=(STANDBY_LOGFILES,STANDBY_ROLE) 
+  DB_UNIQUE_NAME=chicago'
+LOG_ARCHIVE_DEST_STATE_3=ENABLE
+=========================================================
+
+Build a Dictionary in the Redo Data
+SQL> EXECUTE DBMS_LOGSTDBY.BUILD;
+The DBMS_LOGSTDBY.BUILD procedure waits for all existing transactions to complete. 
+Long-running transactions executed on the primary database will affect the timeliness of this command.
+# 手动添加附加日志
+SQL>  ALTER DATABASE ADD SUPPLEMENTAL LOG DATA (PRIMARY KEY, UNIQUE INDEX) COLUMNS;
+
+4. Transition to a Logical Standby Database									Standby
+4.2.4.1 Convert to a Logical Standby Database
+SQL> ALTER SYSTEM SET CLUSTER_DATABASE=FALSE SCOPE=SPFILE;
+SQL> SHUTDOWN ABORT;
+SQL> STARTUP MOUNT EXCLUSIVE; 
+SQL> ALTER DATABASE RECOVER TO LOGICAL STANDBY db_name;
+The statement waits, applying redo data until the LogMiner dictionary is found in the log files. 
+# 滚动升级则执行以下语句
+# SQL> ALTER DATABASE RECOVER TO LOGICAL STANDBY KEEP IDENTITY;
+4.2.4.2 Adjust Initialization Parameters for the Logical Standby Database
+SQL> ALTER SYSTEM SET CLUSTER_DATABASE=TRUE SCOPE=SPFILE;  # RAC
+SQL> SHUTDOWN;
+SQL> STARTUP MOUNT;
+----- Modifying Initialization Parameters for a Logical Standby Database
+=========================================================
+LOG_ARCHIVE_DEST_1=
+  'LOCATION=/arch1/boston/
+   VALID_FOR=(ONLINE_LOGFILES,ALL_ROLES)
+   DB_UNIQUE_NAME=boston'
+LOG_ARCHIVE_DEST_2=
+  'SERVICE=chicago ASYNC
+   VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE)
+   DB_UNIQUE_NAME=chicago'
+LOG_ARCHIVE_DEST_3=
+  'LOCATION=/arch2/boston/
+   VALID_FOR=(STANDBY_LOGFILES,STANDBY_ROLE)
+   DB_UNIQUE_NAME=boston'
+LOG_ARCHIVE_DEST_STATE_1=ENABLE
+LOG_ARCHIVE_DEST_STATE_2=ENABLE
+LOG_ARCHIVE_DEST_STATE_3=ENABLE
+=========================================================
+
+5. Open the Logical Standby Database										Standby
+SQL> ALTER DATABASE OPEN RESETLOGS;
+Issue the following statement to begin applying redo data to the logical standby database:
+SQL>  ALTER DATABASE START LOGICAL STANDBY APPLY IMMEDIATE;
+
+6. Verify the Logical Standby Database Is Performing Properly				Standby
+Chapter 6, "Redo Transport Services"
+6.4 Monitoring Redo Transport Services
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/log_transport.htm#SBYDB4756
+6.4.1 Monitoring Redo Transport Status
+6.4.2 Monitoring Synchronous Redo Transport Response Time
+6.4.3 Redo Gap Detection and Resolution
+6.4.4 Redo Transport Services Wait Events
+
+Chapter 10, "Managing a Logical Standby Database"
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/manage_ls.htm#SBYDB00800
+10.4 Monitoring a Logical Standby Database
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/manage_ls.htm#SBYDB4821
+10.4.1 Monitoring SQL Apply Progress
+10.4.2 Automatic Deletion of Log Files
+
+

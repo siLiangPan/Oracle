@@ -1,0 +1,113 @@
+Role Transitions Involving Physical Standby Databases
+1. Performing a Switchover to a Physical Standby Database
+2. Performing a Failover to a Physical Standby Database
+
+#=====================================
+# 正常切换
+#=====================================
+1. Performing a Switchover to a Physical Standby Database
+Step 1   Verify that the primary database can be switched to the standby role.
+SQL> SELECT SWITCHOVER_STATUS FROM V$DATABASE;
+
+SWITCHOVER_STATUS 
+ ----------------- 
+ TO STANDBY 
+ 1 row selected 
+ 
+A value of TO STANDBY or SESSIONS ACTIVE indicates that the primary database can be switched to the standby role. 
+
+Step 2   Initiate the switchover on the primary database.
+SQL> ALTER DATABASE COMMIT TO SWITCHOVER TO PHYSICAL STANDBY WITH SESSION SHUTDOWN;
+
+Step 3   Shut down and then mount the former primary database.
+SQL> SHUTDOWN ABORT;
+SQL> STARTUP MOUNT;
+
+Step 4   Verify that the switchover target is ready to be switched to the primary role.			standby 
+SQL> SELECT SWITCHOVER_STATUS FROM V$DATABASE;
+
+SWITCHOVER_STATUS 
+----------------- 
+TO_PRIMARY 
+1 row selected
+
+A value of TO PRIMARY or SESSIONS ACTIVE indicates that the standby database is ready to be switched to the primary role. 
+
+Step 5   Switch the target physical standby database role to the primary role.
+SQL> ALTER DATABASE COMMIT TO SWITCHOVER TO PRIMARY WITH SESSION SHUTDOWN;
+
+Step 6   Open the new primary database.
+SQL> ALTER DATABASE OPEN;
+
+Step 7   Start Redo Apply on the new physical standby database.
+SQL> ALTER DATABASE RECOVER MANAGED STANDBY DATABASE USING CURRENT LOGFILE DISCONNECT FROM SESSION;
+
+Step 8   Restart Redo Apply if it has stopped at any of the other physical standby databases in your Data Guard configuration. # 其他物理备库上操作
+SQL> ALTER DATABASE RECOVER MANAGED STANDBY DATABASE USING CURRENT LOGFILE DISCONNECT FROM SESSION;
+
+
+#=====================================
+# 故障切换
+#=====================================
+2. Performing a Failover to a Physical Standby Database
+Step 1   Flush any unsent redo from the primary database to the target standby database.
+SQL> ALTER SYSTEM FLUSH REDO TO target_db_name; # 主库mount状态执行，执行成功，则能确保数据零丢失
+
+Step 2   Verify that the standby database has the most recently archived redo log file for each primary database redo thread.
+SQL> SELECT UNIQUE THREAD# AS THREAD, MAX(SEQUENCE#) OVER (PARTITION BY thread#) AS LAST from V$ARCHIVED_LOG;
+    THREAD       LAST
+---------- ----------
+         1        100
+If possible, copy the most recently archived redo log file for each primary database redo thread to the standby database 
+if it does not exist there, and register it. This must be done for each redo thread.
+SQL> ALTER DATABASE REGISTER PHYSICAL LOGFILE 'filespec1';
+
+Step 3   Identify and resolve any archived redo log gaps.
+SQL> SELECT THREAD#, LOW_SEQUENCE#, HIGH_SEQUENCE# FROM V$ARCHIVE_GAP;
+THREAD#    LOW_SEQUENCE# HIGH_SEQUENCE#
+---------- ------------- --------------
+         1            90             92		 
+		 
+In this example the gap comprises archived redo log files with sequence numbers 90, 91, and 92 for thread 1.
+If possible, copy any missing archived redo log files to the target standby database from the primary database and register them at the target standby database. 
+This must be done for each redo thread.		 
+SQL> ALTER DATABASE REGISTER PHYSICAL LOGFILE 'filespec1';
+
+Step 4   Repeat Step 3 until all gaps are resolved.
+
+
+Step 5   Stop Redo Apply.
+Issue the following SQL statement on the target standby database:
+SQL> ALTER DATABASE RECOVER MANAGED STANDBY DATABASE CANCEL;
+
+Step 6   Finish applying all received redo data.
+Issue the following SQL statement on the target standby database:
+SQL> ALTER DATABASE RECOVER MANAGED STANDBY DATABASE FINISH;
+
+Step 7   Verify that the target standby database is ready to become a primary database.
+SQL> SELECT SWITCHOVER_STATUS FROM V$DATABASE;
+SWITCHOVER_STATUS
+-----------------
+TO PRIMARY
+1 row selected
+
+Step 8   Switch the physical standby database to the primary role.
+SQL> ALTER DATABASE COMMIT TO SWITCHOVER TO PRIMARY WITH SESSION SHUTDOWN;
+
+Step 9   Open the new primary database.
+SQL> ALTER DATABASE OPEN;
+
+Step 10   Back up the new primary database.
+
+Step 11   Restart Redo Apply if it has stopped at any of the other physical standby databases in your Data Guard configuration. # 其他物理备库上操作
+SQL> ALTER DATABASE RECOVER MANAGED STANDBY DATABASE USING CURRENT LOGFILE DISCONNECT FROM SESSION;
+
+Step 12   Optionally, restore the failed primary database.
+13.2 Converting a Failed Primary Into a Standby Database Using Flashback Database
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/scenarios.htm#SBYDB00910
+13.2.1 Flashing Back a Failed Primary Database into a Physical Standby Database
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/scenarios.htm#SBYDB4888
+
+13.7 Converting a Failed Primary into a Standby Database Using RMAN Backups
+
+

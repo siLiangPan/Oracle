@@ -1,0 +1,79 @@
+Role Transitions Involving Logical Standby Databases
+1. Performing a Switchover to a Logical Standby Database
+2. Performing a Failover to a Logical Standby Database
+
+
+#=====================================
+# 正常切换
+#=====================================
+1. Performing a Switchover to a Logical Standby Database
+Step 1   Verify it is possible to perform a switchover on the primary database.
+SQL> SELECT SWITCHOVER_STATUS FROM V$DATABASE;
+SWITCHOVER_STATUS
+-----------------
+TO STANDBY
+1 row selected
+
+Step 2   Prepare the current primary database for the switchover.
+SQL> ALTER DATABASE PREPARE TO SWITCHOVER TO LOGICAL STANDBY;
+
+Step 3   Prepare the target logical standby database for the switchover.
+SQL> ALTER DATABASE PREPARE TO SWITCHOVER TO PRIMARY; 
+
+Step 4   Ensure the current primary database is ready for the future primary database's redo stream.
+When the query returns the TO LOGICAL STANDBY value, you can proceed with Step 5.
+SQL> SELECT SWITCHOVER_STATUS FROM V$DATABASE;
+SWITCHOVER_STATUS
+-----------------
+TO LOGICAL STANDBY
+1 row selected
+
+Step 5   Switch the primary database to the logical standby database role.
+SQL> ALTER DATABASE COMMIT TO SWITCHOVER TO LOGICAL STANDBY; 
+
+Step 6   Ensure all available redo has been applied to the target logical standby database that is about to become the new primary database.
+The SWITCHOVER_STATUS value is updated to show progress during the switchover. When the status is TO PRIMARY, you can proceed with Step 7.
+SQL> SELECT SWITCHOVER_STATUS FROM V$DATABASE;
+SWITCHOVER_STATUS
+-----------------
+TO PRIMARY
+1 row selected
+
+Step 7   Switch the target logical standby database to the primary database role.
+SQL> ALTER DATABASE COMMIT TO SWITCHOVER TO PRIMARY;
+
+Step 8   Start SQL Apply on the new logical standby database.
+SQL> ALTER DATABASE START LOGICAL STANDBY APPLY IMMEDIATE;
+
+
+
+#=====================================
+# 故障切换
+#=====================================
+2. Performing a Failover to a Logical Standby Database
+Step 1   Flush any unsent redo from the primary database to the target standby database.
+SQL> ALTER SYSTEM FLUSH REDO TO target_db_name; # 主库mount状态执行，执行成功，则能确保数据零丢失
+
+Step 2   Copy and register any missing archived redo log files to the target logical standby database slated to become the new primary database.
+    Determine if any archived redo log files are missing on the logical standby database.
+    Copy missing log files from the primary database to the logical standby database.
+    Register the copied log files.
+		SQL> ALTER DATABASE REGISTER LOGICAL LOGFILE '/disk1/oracle/dbs/log-%r_%s_%t.arc';
+		
+Step 3   Enable remote destinations.		
+SQL> ALTER SYSTEM SET LOG_ARCHIVE_DEST_STATE_2=ENABLE SCOPE=BOTH;
+
+Step 4   Activate the new primary database.
+SQL> ALTER DATABASE ACTIVATE LOGICAL STANDBY DATABASE FINISH APPLY;
+
+Step 5   Recovering other standby databases after a failover
+13.1 Configuring Logical Standby Databases After a Failover
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/scenarios.htm#SBYDB4885
+
+Step 6   Back up the new primary database.
+
+Step 7   Restore the failed primary database.
+13.2 Converting a Failed Primary Into a Standby Database Using Flashback Database
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/scenarios.htm#SBYDB00910
+13.2.2 Flashing Back a Failed Primary Database into a Logical Standby Database
+https://docs.oracle.com/cd/E11882_01/server.112/e41134/scenarios.htm#SBYDB4889
