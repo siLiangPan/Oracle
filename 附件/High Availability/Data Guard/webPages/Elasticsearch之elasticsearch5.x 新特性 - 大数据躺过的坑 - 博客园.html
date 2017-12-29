@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://www.cnblogs.com/zlslch/p/6619089.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/bundle-darkgreentrip.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/bundle-darkgreentrip-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/zlslch/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/zlslch/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/zlslch/wlwmanifest.xml">
+<script async="" src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/analytics.js"></script><script src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'zlslch', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+<!--PageBeginHtml Block Begin-->
+
+
+
+
+
+
+<title>打赏</title>
+
+<script>
+        window.tctipConfig = {
+            staticPrefix: "http://static.tctip.com",
+            buttonImageId: 5,
+            buttonTip:  "dashang",
+            list:{
+                alipay: { qrimg: "http://files.cnblogs.com/files/zlslch/zhifubao.bmp"}, //修改1
+                weixin: { qrimg: "http://files.cnblogs.com/files/zlslch/weixin.bmp"}, //修改2
+            }
+        };
+</script>
+<script src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/tctip.min.js"></script>
+
+
+
+<!--PageBeginHtml Block End-->
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/zlslch/"><img id="blogLogo" src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/zlslch/">大数据躺过的坑</a></h1>
+<h2>欢迎您的加入！
+
+
+
+微信公众号平台： 大数据躺过的坑
+
+
+
+微信公众号平台： 免费给分享
+
+
+
+大数据躺过的坑（总群）： 161156071
+
+
+
+更多QQ技术分群，详情请见：http://www.cnblogs.com/zlslch/p/7473861.html</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/zlslch/">首页</a></li>
+<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/%E5%A4%A7%E6%95%B0%E6%8D%AE%E8%BA%BA%E8%BF%87%E7%9A%84%E5%9D%91">联系</a></li>
+<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/zlslch/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/zlslch/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<span id="stats_post_count">随笔 - 1844&nbsp; </span>
+<span id="stats_article_count">文章 - 0&nbsp; </span>
+<span id="stats-comment_count">评论 - 68</span>
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/zlslch/p/6619089.html">Elasticsearch之elasticsearch5.x 新特性</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>&nbsp;</p>
+<p>　　其实，elasticsearch5.x 和 elasticsearch2.x 并不区别很大。</p>
+<p>　　是因为，ELK里之前版本各种很混乱，直接升级到5.0了。</p>
+<p>　　其实，elasticsearch5.x 按理来说是elasticsearch3.x，只是为了跟随ELK整体版本的统一。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　　　　　&nbsp;<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235135596-1837440713.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">下面给大家介绍一下&nbsp;5.0&nbsp;版里面的一些新的特性和改进</span></strong></p>
+<p><strong>　　5.0</strong><strong>？ 天啦噜，你是不是觉得版本跳的太快了。</strong></p>
+<p>　　好吧，先来说说背后的原因吧。</p>
+<p>　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235159643-512355029.png" alt=""></p>
+<p>　　相信大家都听说&nbsp;ELK&nbsp;吧，是&nbsp;Elasticsearch&nbsp;、&nbsp;Logstash&nbsp;、&nbsp;Kibana&nbsp;三个产品的首字母缩写，<strong><span style="color: #0000ff;">现在&nbsp;Elastic&nbsp;又新增了一个新的开源项目成员：&nbsp;Beats。</span></strong></p>
+<p>　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235222299-1801587901.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;　　有人建议以后这么叫：&nbsp;<strong><span style="color: #0000ff;">ELKB&nbsp;</span></strong>？</p>
+<p>&nbsp;</p>
+<p>　　为了未来更好的扩展性:) ELKBS？ELKBSU？.....</p>
+<p>　　所以我们打算将产品线命名为&nbsp;ElasticStack</p>
+<p>　　同时<strong><span style="color: #0000ff;">由于现在的版本比较混乱，每个产品的版本号都不一样</span></strong>，&nbsp;Elasticsearch和Logstash目前是2.3.4；Kibana是4.5.3；Beats是1.2.3；</p>
+<p>　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235257611-1406158587.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　版本号太乱了有没有，什么版本的&nbsp;ES&nbsp;用什么版本的&nbsp;Kibana&nbsp;？有没有兼容性问题？</p>
+<p>　　<span style="font-size: 14pt;"><strong><span style="color: #0000ff;">所以我们打算将这些的产品版本号也统一一下</span></strong></span>，即&nbsp;v5.0&nbsp;，为什么是&nbsp;5.0&nbsp;，因为&nbsp;Kibana&nbsp;都&nbsp;4.x&nbsp;了，下个版本就只能是&nbsp;5.0&nbsp;了，其他产品就跟着跳跃一把，第一个&nbsp;5.0&nbsp;正式版将在今年的秋季发布，目前最新的测试版本是：&nbsp;5.0 Alpha 4。</p>
+<p>　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235341783-190444500.png" alt=""></p>
+<p>　　目前各团队正在紧张的开发测试中，每天都有新的功能和改进，本次分享主要介绍一下&nbsp;Elasticsearch&nbsp;的主要变化。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">Elasticsearch5.0新增功能</span></strong></p>
+<p>　　首先来看看&nbsp;5.0&nbsp;里面都引入了哪些新的功能吧。</p>
+<h4><span style="font-size: 18pt;"><strong><span style="color: #0000ff;">1、</span></strong></span>首先看看跟性能有关的</h4>
+<h4>　　1.1 第一个就是Lucene 6.x 的支持。</h4>
+<p>　　Elasticsearch5.0率先集成了Lucene6版本，其中最重要的特性就是 Dimensional Point Fields，多维浮点字段，ES里面相关的字段如date, numeric，ip 和 Geospatial 都将大大提升性能。</p>
+<p>　　这么说吧，磁盘空间少一半；索引时间少一半；查询性能提升25%；IPV6也支持了。</p>
+<p>　　为什么快，底层使用的是Block k-d trees，核心思想是将数字类型编码成定长的字节数组，对定长的字节数组内容进行编码排序，然后来构建二叉树，然后依次递归构建，目前底层支持8个维度和最多每个维度16个字节，基本满足大部分场景。</p>
+<p>　　说了这么多，看图比较直接。</p>
+<p>　　　　　　　　　　　　&nbsp;<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235432549-997243375.png" alt=""></p>
+<p>　　图中从&nbsp;2015&nbsp;/10/32&nbsp;&nbsp;total bytes&nbsp;飙升是因为&nbsp;es&nbsp;启用了&nbsp;docvalues&nbsp;，我们关注红线，最近的引入新的数据结构之后，红色的索引大小只有原来的一半大小。</p>
+<p>　　索引小了之后，&nbsp;merge&nbsp;的时间也响应的减少了，看下图：</p>
+<p>　　　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235455861-885058949.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;　　相应的&nbsp;Java&nbsp;堆内存占用只原来的一半：</p>
+<p>　　　　　　　　　　&nbsp;<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235509721-1185550732.png" alt=""></p>
+<p>&nbsp;</p>
+<p>　　<strong>1.2</strong> &nbsp;再看看&nbsp;<strong>索引的性能</strong>&nbsp;，也是飙升：</p>
+<p>　　　　　　　　　　&nbsp;<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235522721-1949146733.png" alt=""></p>
+<p>　　当然&nbsp;Lucene6&nbsp;里面还有很多优化和改进，这里没有一一列举。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　<strong>　1.3&nbsp;</strong> 我们再看看索引性能方面的其他优化。</p>
+<p>　　ES5.0在Internal engine级别移除了用于避免同一文档并发更新的竞争锁，带来15%-20%的性能提升&nbsp;<strong>#18060</strong>&nbsp;。</p>
+<p>　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235606986-1682862552.png" alt=""></p>
+<p>　　　　以上截图来自&nbsp;ES&nbsp;的每日持续性能监控：&nbsp;https://benchmarks.elastic.co/index.html</p>
+<p>&nbsp;</p>
+<h4>　　1.4 另一个&nbsp;和&nbsp;aggregation&nbsp;的改进也是非常大，&nbsp;Instant Aggregations。</h4>
+<p>　　Elasticsearch已经在Shard层面提供了Aggregation缓存，如果你的数据没有变化，ES能够直接返回上次的缓存结果，但是有一个场景比较特殊，就是 date histogram，大家kibana上面的条件是不是经常设置的相对时间，如：from:now-30d to:now，好吧，now是一个变量，每时每刻都在变，所以query条件一直在变，缓存也就是没有利用起来。</p>
+<p>　　经过一年时间大量的重构，现在可以做到对查询做到灵活的重写：</p>
+<p>　　　　首先，`now`关键字最终会被重写成具体的值；</p>
+<p>　　　　其次&nbsp;<strong>，</strong>&nbsp;每个shard会根据自己的数据的范围来重写查询为 `match_all`或者是`match_none`查询，所以现在的查询能够被有效的缓存，并且只有个别数据有变化的Shard才需要重新计算，大大提升查询速度。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　<strong>1.5 &nbsp;&nbsp;</strong>另外再看看和Scroll相关的吧。</p>
+<p>　　现在新增了一个：Sliced Scroll类型</p>
+<p>　　用过Scroll接口吧，很慢？如果你数据量很大，用Scroll遍历数据那确实是接受不了，现在Scroll接口可以并发来进行数据遍历了。</p>
+<p>　　每个Scroll请求，可以分成多个Slice请求，可以理解为切片，各Slice独立并行，利用Scroll重建或者遍历要快很多倍。</p>
+<p>　　看看这个demo</p>
+<p>　　　　　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235721799-48686168.png" alt=""></p>
+<p>　　可以看到两个&nbsp;scroll&nbsp;请求，&nbsp;id&nbsp;分别是&nbsp;0&nbsp;和&nbsp;1&nbsp;，&nbsp;max&nbsp;是最大可支持的并行任务，可以各自独立进行数据的遍历获取。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18pt;"><strong><span style="color: #0000ff;">2、</span></strong></span>我们再看看es在查询优化这块做的工作</p>
+<h4>　　2.1 新增了一个Profile API。</h4>
+<p>#https://www.elastic.co/guide/en/elasticsearch/reference/master/search-profile.html#_usage_3</p>
+<p>　　都说要致富先修路，要调优当然需要先监控啦，elasticsearch在很多层面都提供了stats方便你来监控调优，但是还不够，其实很多情况下查询速度慢很大一部分原因是糟糕的查询引起的，玩过SQL的人都知道，数据库服务的执行计划（execution plan）非常有用，可以看到那些查询走没走索引和执行时间，用来调优，elasticsearch现在提供了Profile API来进行查询的优化，只需要在查询的时候开启profile：true就可以了，一个查询执行过程中的每个组件的性能消耗都能收集到。</p>
+<p>　　　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235753908-1505539590.png" alt=""></p>
+<p>&nbsp;</p>
+<p>　　那个子查询耗时多少，占比多少，一目了然。</p>
+<p>　　同时支持search和aggregation的profile。</p>
+<p>　　还有一个和翻页相关的问题，就是深度分页&nbsp;，是个老大难的问题，因为需要全局排序（&nbsp;number_of_shards * (from + size)&nbsp;），所以需要消耗大量内存，以前的&nbsp;es&nbsp;没有限制，有些同学翻到几千页发现&nbsp;es&nbsp;直接内存溢出挂了，后面&nbsp;elasticsearch&nbsp;加上了限制，&nbsp;from+size&nbsp;不能超过&nbsp;1w&nbsp;条，并且如果需要深度翻页，建议使用&nbsp;scroll&nbsp;来做。</p>
+<p>　　但是&nbsp;scroll&nbsp;有几个问题，第一个是没有顺序，直接从底层&nbsp;segment&nbsp;进行遍历读取，第二个实时性没法保证，&nbsp;scroll&nbsp;操作有状态，&nbsp;es&nbsp;会维持&nbsp;scroll&nbsp;请求的上下文一段时间，超时后才释放，另外你在&nbsp;scroll&nbsp;过程中对索引数据进行了修改了，这个时候&nbsp;scroll接口是拿不到的，灵活性较差，&nbsp;现在有一个新的&nbsp;Search After&nbsp;机制，其实和&nbsp;scroll&nbsp;类似，也是游标的机制，它的原理是对文档按照多个字段进行排序，然后利用上一个结果的最后一个文档作为起始值，拿&nbsp;size&nbsp;个文档，一般我们建议使用&nbsp;_uid&nbsp;这个字段，它的值是唯一的&nbsp;id&nbsp;。</p>
+<p>#（Search After</p>
+<p>https://github.com/elastic/elasticsearch/blob/148f9af5857f287666aead37f249f204a870ab39/docs/reference/search/request/search-after.asciidoc&nbsp;）</p>
+<p>　　来看一个Search After 的demo 吧，比较直观的理解一下：</p>
+<p>　　　　　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235818002-1726839844.png" alt=""></p>
+<p>&nbsp;</p>
+<p>　　上面的&nbsp;demo&nbsp;，&nbsp;search_after&nbsp;后面带的两个参数，就是&nbsp;sort&nbsp;的两个结果。</p>
+<p>　　根据你的排序条件来的，三个排序条件，就传三个参数。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18pt;"><strong><span style="color: #0000ff;">3、</span></strong></span>再看看跟索引与分片管理相关的新功能吧。</p>
+<h4>　　3.1 新增了一个&nbsp;Shrink&nbsp;&nbsp;API</h4>
+<p>#https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-shrink-index.html#_shrinking_an_index</p>
+<p>　　相信大家都知道elasticsearch索引的shard数是固定的，设置好了之后不能修改，如果发现shard太多或者太少的问题，之前如果要设置Elasticsearch的分片数，只能在创建索引的时候设置好，并且数据进来了之后就不能进行修改，如果要修改，只能重建索引。</p>
+<p>　　现在有了Shrink接口，它可将分片数进行收缩成它的因数，如之前你是15个分片，你可以收缩成5个或者3个又或者1个，那么我们就可以想象成这样一种场景，在写入压力非常大的收集阶段，设置足够多的索引，充分利用shard的并行写能力，索引写完之后收缩成更少的shard，提高查询性能。</p>
+<p>　　这里是一个API调用的例子</p>
+<p>　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235846877-1512182075.png" alt=""></p>
+<p>　　上面的例子对&nbsp;my_source_index&nbsp;伸缩成一个分片的&nbsp;my_targe_index,&nbsp;使用了最佳压缩。</p>
+<p>　　有人肯定会问慢不慢？非常快！ Shrink的过程会借助操作系统的Hardlink进行索引文件的链接，这个操作是非常快的，毫秒级Shrink就可收缩完成，当然windows不支持hard link，需要拷贝文件，可能就会很慢了。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　再来看另外一个比较有意思的新特性，除了有意思，当然还很强大。</p>
+<h4>　　3.2 新增了一个Rollover API。</h4>
+<p>https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-rollover-index.html#indices-rollover-index</p>
+<p>　　前面说的这种场景对于日志类的数据非常有用，一般我们按天来对索引进行分割（数据量更大还能进一步拆分），我们以前是在程序里设置一个自动生成索引的模板，大家用过logstash应该就记得有这么一个模板logstash-[YYYY-MM-DD]这样的模板，现在es5.0里面提供了一个更加简单的方式：Rollover API</p>
+<p>　　API调用方式如下：</p>
+<p>　　　　　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235912330-417331800.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　从上面可以看到，首先创建一个&nbsp;logs-0001&nbsp;的索引，它有一个别名是&nbsp;logs_write,&nbsp;然后我们给这个&nbsp;logs_write&nbsp;创建了一个&nbsp;rollover&nbsp;规则，即这个索引文档不超过&nbsp;1000&nbsp;个或者最多保存&nbsp;7&nbsp;天的数据，超过会自动切换别名到&nbsp;logs-0002,&nbsp;你也可以设置索引的&nbsp;setting&nbsp;、&nbsp;mapping&nbsp;等参数&nbsp;,&nbsp;剩下的&nbsp;es&nbsp;会自动帮你处理。这个特性对于存放日志数据的场景是极为友好的。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h4>　　3.3 &nbsp;新增：Reindex。</h4>
+<p>　　另外关于索引数据，大家之前经常重建，数据源在各种场景，重建起来很是头痛，那就不得不说说现在新加的Reindex接口了，Reindex可以直接在Elasticsearch集群里面对数据进行重建，如果你的mapping因为修改而需要重建，又或者索引设置修改需要重建的时候，借助Reindex可以很方便的异步进行重建，并且支持跨集群间的数据迁移。</p>
+<p>　　比如按天创建的索引可以定期重建合并到以月为单位的索引里面去。</p>
+<p>　　当然索引里面要启用_source。</p>
+<p>　　来看看这个demo吧，重建过程中，还能对数据就行加工。</p>
+<p>　　　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170325235938127-1989503956.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>　　3.4 &nbsp;再看看跟Java开发者最相关的吧，就是 RestClient了</strong></p>
+<p>　　5.0里面提供了第一个Java原生的REST客户端SDK，相比之前的TransportClient，版本依赖绑定，集群升级麻烦，不支持跨Java版本的调用等问题，新的基于HTTP协议的客户端对Elasticsearch的依赖解耦，没有jar包冲突，提供了集群节点自动发现、日志处理、节点请求失败自动进行请求轮询，充分发挥Elasticsearch的高可用能力，并且性能不相上下。&nbsp;<strong>#19055</strong>&nbsp;。</p>
+<p>&nbsp;</p>
+<p>　　</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18pt; color: #0000ff;"><strong>4、</strong></span>然后我们再看看其他的特性吧：</p>
+<h4>　　4.1 新增了一个&nbsp;Wait for refresh&nbsp;功能。</h4>
+<p>　　简单来说相当于是提供了文档级别的Refresh： https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-refresh.html。</p>
+<p>　　索引操作新增refresh参数，大家知道elasticsearch可以设置refresh时间来保证数据的实时性，refresh时间过于频繁会造成很大的开销，太小会造成数据的延时，之前提供了索引层面的_refresh接口，但是这个接口工作在索引层面，我们不建议频繁去调用，如果你有需要修改了某个文档，需要客户端实时可见怎么办？</p>
+<p>　　在 5.0中，Index、Bulk、Delete、Update这些数据新增和修改的接口能够在单个文档层面进行refresh控制了，有两种方案可选，一种是创建一个很小的段，然后进行刷新保证可见和消耗一定的开销，另外一种是请求等待es的定期refresh之后再返回。</p>
+<p>　　调用例子：</p>
+<p>&nbsp;</p>
+<p>　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170326000005315-1224242494.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h4>　　4.2 # 新增：&nbsp;Ingest Node&nbsp;#</h4>
+<p>　　#https://www.elastic.co/guide/en/elasticsearch/reference/master/ingest.html#</p>
+<p>　　再一个比较重要的特性就是IngestNode了，大家之前如果需要对数据进行加工，都是在索引之前进行处理，比如logstash可以对日志进行结构化和转换，现在直接在es就可以处理了，目前es提供了一些常用的诸如convert、grok之类的处理器，在使用的时候，先定义一个pipeline管道，里面设置文档的加工逻辑，在建索引的时候指定pipeline名称，那么这个索引就会按照预先定义好的pipeline来处理了；</p>
+<p>　　Demo again：</p>
+<p>　　　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170326000021783-1467409645.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　上图首先创建了一个名为my-pipeline-id的处理管道，然后接下来的索引操作就可以直接使用这个管道来对foo字段进行操作了，上面的例子是设置foo字段为bar值。</p>
+<p>　　上面的还不太酷，我们再来看另外一个例子，现在有这么一条原始的日志，内容如下：</p>
+<p>{</p>
+<p>"message": "55.3.244.1 GET /index.html 15824 0.043”</p>
+<p>}</p>
+<p>　　google之后得知其Grok的pattern如下：）</p>
+<p>%{IP:client} %{WORD:method} %{URIPATHPARAM:request} %{NUMBER:bytes} %{NUMBER:duration}</p>
+<p>　　那么我们使用Ingest就可以这么定义一个pipeline：</p>
+<p>　　　　　　　　　　&nbsp;<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170326000038596-600212832.png" alt="">　　</p>
+<p>　　那么通过我们的&nbsp;pipeline&nbsp;处理之后的文档长什么样呢，我们获取这个文档的内容看看：</p>
+<p>　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170326000107611-2004280656.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　很明显，原始字段&nbsp;message&nbsp;被拆分成了更加结构化的对象了。</p>
+<p>　　</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #0000ff; font-size: 18pt;">5、</span></strong>再看看脚本方面的改变</p>
+<h4>　　5.1 &nbsp;#新增Painless Scripting#</h4>
+<p>　　还记得Groove脚本的漏洞吧，Groove脚本开启之后，如果被人误用可能带来的漏洞，为什么呢，主要是这些外部的脚本引擎太过于强大，什么都能做，用不好或者设置不当就会引起安全风险，基于安全和性能方面，我们自己开发了一个新的脚本引擎，名字就叫Painless，顾名思义，简单安全，无痛使用，和Groove的沙盒机制不一样，Painless使用白名单来限制函数与字段的访问，针对es的场景来进行优化，只做es数据的操作，更加轻量级，速度要快好几倍，并且支持Java静态类型，语法保持Groove类似，还支持Java的lambda表达式。</p>
+<p>　　我们对比一下性能，看下图</p>
+<p>　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170326000134190-1658627867.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　Groovy&nbsp;是弱弱的绿色的那根。</p>
+<p>　　再看看如何使用：</p>
+<p>def first = input.doc.first_name.0;</p>
+<p>def last &nbsp;= input.doc.last_name.0;</p>
+<p>return first + " " + last;</p>
+<p>　　是不是和之前的写法差不多</p>
+<p>　　或者还可以是强类型（10倍速度于上面的动态类型）</p>
+<p>String first = (String)((List)((Map)input.get("doc")).get("first_name")).get(0);</p>
+<p>String last &nbsp;= (String)((List)((Map)input.get("doc")).get("last_name")).get(0);</p>
+<p>return first + " " + last;</p>
+<p>　　脚本可以在很多地方使用，比如搜索自定义评分；更新时对字段进行加工等</p>
+<p>　　如：</p>
+<p>　　　　　　　　　　<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170326000157393-1176168364.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #0000ff; font-size: 18pt;">&nbsp;6、</span>再来看看基础架构方面的变化</strong></p>
+<h4>　　6.1 新增：Task Manager</h4>
+<p>　　这个是5.0 引入任务调度管理机制，用来做&nbsp;离线任务的管理，比如长时间运行的reindex和update_by_query等都是运行在TaskManager机制之上的，并且任务是可管理的，你可以随时cancel掉，并且任务状态持久化，支持故障恢复；</p>
+<h4>　　6.2 还新增一个：&nbsp;Depreated logging</h4>
+<p>　　大家在用ES的时候，其实有些接口可能以及打上了Depreated标签，即废弃了，在将来的某个版本中就会移除，你当前能用是因为一般废弃的接口都不会立即移除，给足够的时间迁移，但是也是需要知道哪些不能用了，要改应用代码了，所以现在有了Depreated日志，当打开这个日志之后，你调用的接口如果已经是废弃的接口，就会记录下日志，那么接下来的事情你就知道你应该怎么做了。</p>
+<h4>　　6.3 新增&nbsp;: Cluster allocation explain API</h4>
+<p>　　『谁能给我一个shard不能分配的理由』，现在有了，大家如果之前遇到过分片不能正常分配的问题，但是不知道是什么原因，只能尝试手动路由或者重启节点，但是不一定能解决，其实里面有很多原因，现在提供的这个explain接口就是告诉你目前为什么不能正常分配的原因，方便你去解决。</p>
+<h4>　　6.4 另外在数据结构这块，新增&nbsp;: half_float&nbsp;类型</h4>
+<p>https://www.elastic.co/guide/en/elasticsearch/reference/master/number.html</p>
+<p>　　只使用 16 位 足够满足大部分存储监控数值类型的场景，支持范围：2负24次方 到 65504，但是只占用float一半的存储空间。</p>
+<h4>　　6.5 Aggregation&nbsp;新增&nbsp;: Matrix Stats Aggregation #&nbsp;18300</h4>
+<p>金融领域非常有用的，可计算多个向量元素协方差矩阵、相关系数矩阵等等</p>
+<h4>　　6.6 另外一个重要的特性：为索引写操作添加顺序号&nbsp;#&nbsp;10708</h4>
+<p>　　大家知道es是在primary上写完然后同步写副本，这些请求都是并发的，虽然可以通过version来控制冲突，</p>
+<p>　　但是没法保证其他副本的操作顺序，通过写的时候产生顺序号，并且在本地也写入checkpoint来记录操作点，</p>
+<p>　　这样在副本恢复的时候也可以知道当前副本的数据位置，而只需要从指定的数据开始恢复就行了，而不是像以前的粗暴的做完整的文件同步&nbsp;，另外这些顺序号也是持久化的，重启后也可以快速恢复副本信息，想想以前的大量无用拷贝吧和来回倒腾数据吧。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">7、Elasticsearch5.0其他方面的改进</span></strong></p>
+<p>　　<strong>7.1</strong> 我们再看看&nbsp;<strong>mapping</strong><strong>&nbsp;</strong><strong>这块的改进</strong><strong>&nbsp;</strong>吧。</p>
+<h4>　　　　引入新的字段类型&nbsp;Text/Keyword&nbsp;来替换&nbsp;&nbsp;String</h4>
+<p>　　以前的string类型被分成Text和Keyword两种类型，keyword类型的数据只能完全匹配，适合那些不需要分词的数据，</p>
+<p>　　对过滤、聚合非常友好，text当然就是全文检索需要分词的字段类型了。将类型分开的好处就是使用起来更加简单清晰，以前需要设置analyzer和index，并且有很多都是自定义的分词器，从名称根本看不出来到底分词没有，用起来很麻烦。</p>
+<p>　　另外string类型暂时还在的，6.0会移除。</p>
+<h4>　　7.2 还有关于&nbsp;Index&nbsp;Settings&nbsp;的改进</h4>
+<p>　　Elasticsearch的配置实在太多，在以前的版本间，还移除过很多无用的配置，经常弄错有没有？</p>
+<p>　　现在，配置验证更加严格和保证原子性，如果其中一项失败，那个整个都会更新请求都会失败，不会一半成功一半失败。下面主要说两点：</p>
+<p>　　　　1.设置可以重设会默认值，只需要设置为 `null`即可</p>
+<p>　　　　2.获取设置接口新增参数`?include_defaults`,可以直接返回所有设置和默认值</p>
+<h4>　　7.3 集群处理的改进&nbsp;: Deleted Index Tombstones</h4>
+<p>　　在以前的es版本中，如果你的旧节点包含了部分索引数据，但是这个索引可能后面都已经删掉了，你启动这个节点之后，会把索引重新加到集群中，是不是觉得有点阴魂不散，现在es5.0会在集群状态信息里面保留500个删除的索引信息，所以如果发现这个索引是已经删除过的就会自动清理，不会再重复加进来了。</p>
+<p>　　文档对象的改进&nbsp;:&nbsp;字段名重新支持英文句号，再&nbsp;2.0&nbsp;的时候移除过&nbsp;dot&nbsp;在字段名中的支持，现在问题解决了，又重新支持了。</p>
+<p>　　es会认为下面两个文档的内容一样：</p>
+<p>　　　　　　　　　　　　&nbsp;<img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/855959-20170326000251393-166746379.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;　　7.4&nbsp;<strong>还有其他的一些改进</strong></p>
+<p>　　Cluster state&nbsp;的修改现在会和所有节点进行&nbsp;ack&nbsp;确认。</p>
+<p>　　Shard&nbsp;的一个副本如果失败了，&nbsp;Primary&nbsp;标记失败的时候会和&nbsp;Master&nbsp;节点确认完毕再返回。</p>
+<p>　　使用&nbsp;UUID&nbsp;来作为索引的物理的路径名，有很多好处，避免命名的冲突。</p>
+<p>　　_timestamp&nbsp;和&nbsp;_ttl&nbsp;已经移除，需要在&nbsp;Ingest&nbsp;或者程序端处理。</p>
+<p>　　ES&nbsp;可直接用&nbsp;HDFS&nbsp;来进行备份还原（&nbsp;Snapshot/Restore&nbsp;）了&nbsp;<strong>#15191</strong><strong>&nbsp;</strong>。</p>
+<p>　　Delete-by-query&nbsp;和&nbsp;Update-by-query&nbsp;重新回到&nbsp;core&nbsp;，以前是插件，现在可以直接使用了，也是构建在&nbsp;Reindex&nbsp;机制之上。(es1.x版本是直接支持，在es2.x中提取为插件，5.x继续回归直接支持)</p>
+<p>　　HTTP&nbsp;请求默认支持压缩，当然&nbsp;http&nbsp;调用端需要在&nbsp;header&nbsp;信息里面传对应的支持信息。</p>
+<p>　　创建索引不会再让集群变红了，不会因为这个卡死集群了。</p>
+<p>　　默认使用&nbsp;BM25&nbsp;评分算法，效果更佳，之前是&nbsp;TF/IDF。</p>
+<p>　　快照&nbsp;Snapshots&nbsp;添加&nbsp;UUID&nbsp;解决冲突&nbsp;<strong>#18156</strong><strong>&nbsp;</strong>。</p>
+<p>　　限制索引请求大小，避免大量并发请求压垮&nbsp;ES&nbsp;<strong>#16011</strong><strong>。</strong></p>
+<p>　　限制单个请求的&nbsp;shards&nbsp;数量，默认&nbsp;1000&nbsp;个&nbsp;<strong>#17396</strong><strong>。</strong></p>
+<p>　　移除&nbsp;site plugins&nbsp;，就是说&nbsp;head&nbsp;、&nbsp;bigdesk&nbsp;都不能直接装&nbsp;es&nbsp;里面了，不过可以部署独立站点（反正都是静态文件）或开发&nbsp;kibana&nbsp;插件&nbsp;<strong>#16038</strong><strong>&nbsp;</strong>。</p>
+<p>　　允许现有&nbsp;parent&nbsp;类型新增&nbsp;child&nbsp;类型&nbsp;<strong>#17956</strong><strong>。</strong></p>
+<p>　　这个功能对于使用parent-child特性的人应该非常有用。</p>
+<p>　　支持分号（；）来分割&nbsp;url&nbsp;参数，与符号（&nbsp;&amp;&nbsp;）一样&nbsp;<strong>#18175</strong><strong>&nbsp;</strong>。</p>
+<p>　　比如下面这个例子：</p>
+<p>curl http://localhost:9200/_cluster/health?level=indices;pretty=true</p>
+<p>　　好吧，貌似很多，其实上面说的还只是众多特性和改进的一部分，&nbsp;es5.0&nbsp;做了非常非常多工作，本来还打算讲讲&nbsp;bug&nbsp;修复的，但是太多了，时间有限，&nbsp;一些重要的&nbsp;bug在&nbsp;2.x&nbsp;都已经第一时间解决了。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">8、大家可以查看下面的链接了解更多更详细的更新日志</span></strong></p>
+<p>https://www.elastic.co/guide/en/elasticsearch/reference/master/release-notes-5.0.0-alpha1-2x.html</p>
+<p>https://www.elastic.co/guide/en/elasticsearch/reference/master/release-notes-5.0.0-alpha1.html</p>
+<p>https://www.elastic.co/guide/en/elasticsearch/reference/master/release-notes-5.0.0-alpha2.html</p>
+<p>https://www.elastic.co/guide/en/elasticsearch/reference/master/release-notes-5.0.0-alpha3.html</p>
+<p>https://www.elastic.co/guide/en/elasticsearch/reference/master/release-notes-5.0.0-alpha4.html</p>
+<p>&nbsp;</p>
+<p>下载体验最新的版本&nbsp;：&nbsp;https://www.elastic.co/v5</p>
+<p>升级向导：https://github.com/elastic/elasticsearch-migration/blob/2.x/README.asciidoc</p>
+<p>&nbsp;</p></div><div id="MySignature" style="display: block;"><p style="padding: 10 px 10 px 10 px 10 px; border: 1px dashed rgb(224,224,224); font-family: 微软雅黑; font-size: 13px text-indent:Oem">
+
+作者：<a href="http://www.cnblogs.com/zlslch/" target="_blank">大数据躺过的坑</a><br>
+
+出处：<a href="http://www.cnblogs.com/zlslch/" target="_blank">http://www.cnblogs.com/zlslch/</a><br>
+<br>
+本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文链接，否则保留追究法律责任的权利。
+如果您认为这篇文章还不错或者有所收获，您可以通过右边的“打赏”功能 打赏我一杯咖啡【物质支持】，也可以点击右下角的【好文要顶】按钮【精神支持】，因为这两种支持都是我继续写作，分享的最大动力！
+</p></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/zlslch/category/950999.html" target="_blank">ELK（Elasticsearch/Logstash/Kibana）概念学习系列</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6619089,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;6b1fa008-a2a0-e511-9fc1-ac853d9f53cc&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/zlslch/" target="_blank"><img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/20170929173927.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/zlslch/">大数据躺过的坑</a><br>
+            <a href="http://home.cnblogs.com/u/zlslch/followees">关注 - 28</a><br>
+            <a href="http://home.cnblogs.com/u/zlslch/followers">粉丝 - 280</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;6b1fa008-a2a0-e511-9fc1-ac853d9f53cc&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(6619089,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">2</span>
+    </div>
+    <div class="buryit" onclick="votePost(6619089,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/zlslch/p/6618898.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/zlslch/p/6618898.html" title="发布于2017-03-25 22:55">使用java api操作es需要注意的地方（Elasticsearch开启shield插件之后）</a><br><a href="http://www.cnblogs.com/zlslch/p/6619108.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/zlslch/p/6619108.html" title="发布于2017-03-26 00:13">Elasticsearch之es学习工作中遇到的坑（陆续更新）</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2017-03-26 00:04</span> <a href="http://www.cnblogs.com/zlslch/">大数据躺过的坑</a> 阅读(<span id="post_view_count">12834</span>) 评论(<span id="post_comment_count">3</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=6619089" rel="nofollow">编辑</a> <a href="https://www.cnblogs.com/zlslch/p/6619089.html#" onclick="AddToWz(6619089);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=258403,cb_entryId=6619089,cb_blogApp=currentBlogApp,cb_blogUserGuid='6b1fa008-a2a0-e511-9fc1-ac853d9f53cc',cb_entryCreatedDate='2017/3/26 0:04:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<br>
+<div class="feedback_area_title">评论列表</div>
+<div class="feedbackNoItems"></div>	
+
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="https://www.cnblogs.com/zlslch/p/6619089.html#3712778" class="layer">#1楼</a><a name="3712778" id="comment_anchor_3712778"></a>  <span class="comment_date">2017-06-12 18:56</span> <a id="a_comment_author_3712778" href="http://www.cnblogs.com/qinkun/" target="_blank">093</a> <a href="http://msg.cnblogs.com/send/093" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3712778" class="blog_comment_body">写的很详细，更新速度挺快。现在5.4.1刚刚又发布了。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3712778,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3712778,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="https://www.cnblogs.com/zlslch/p/6619089.html#3767701" class="layer">#2楼</a><a name="3767701" id="comment_anchor_3767701"></a>  <span class="comment_date">2017-08-27 20:03</span> <a id="a_comment_author_3767701" href="http://www.cnblogs.com/AK47Sonic/" target="_blank">AK47Sonic</a> <a href="http://msg.cnblogs.com/send/AK47Sonic" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3767701" class="blog_comment_body">大神，请问bigdesk安装后，用python -m SimpleHTTPServer启动后，页面连接报：<br>Bigdesk may not work correct.<br>Found ES node version: 5.52<br>Requires ES node version&gt;=1.0.0.RC1<br>请问怎么办？</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3767701,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3767701,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3767701_avatar" style="display:none;">http://pic.cnblogs.com/face/1185653/20170622212406.png</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="https://www.cnblogs.com/zlslch/p/6619089.html#3772409" class="layer">#3楼</a><a name="3772409" id="comment_anchor_3772409"></a><span id="comment-maxId" style="display:none;">3772409</span><span id="comment-maxDate" style="display:none;">2017/8/31 23:18:00</span>  <span class="comment_date">2017-08-31 23:18</span> <a id="a_comment_author_3772409" href="http://home.cnblogs.com/u/716515/" target="_blank">血色残阳_1987</a> <a href="http://msg.cnblogs.com/send/%E8%A1%80%E8%89%B2%E6%AE%8B%E9%98%B3_1987" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3772409" class="blog_comment_body">允许现有 parent 类型新增 child 类型 #17956。<br>楼主大神  请问这一条 怎么弄啊？<br>我找了好几天了 都不能在已有的type下加子type<br>求支招，拜谢。。。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3772409,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3772409,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	<div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/zlslch/p/6619089.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/zlslch/p/6619089.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://cloud.tencent.com/developer/labs?fromSource=gwzcw.632116.632116.632116" target="_blank">【推荐】腾讯云免费实验室，1小时搭建人工智能应用</a><br><a href="https://news.cnblogs.com/n/582971/" target="_blank">【新闻】H3 BPM体验平台全面上线</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.gcpowertools.com.cn/products/activereports_overview.htm?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=AR&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/24442-20171206093739878-889349568.png" alt="AR_1206"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/584476/" target="_blank">网易云音乐和天娱传媒达成合作 获全量音乐版权</a><br> ·  <a href="https://news.cnblogs.com/n/584479/" target="_blank">iOS 11的Bug这么多，苹果怎么看？库克这样回应</a><br> ·  <a href="https://news.cnblogs.com/n/584478/" target="_blank">腾讯宣布代理《H1Z1》国服定名为《生存王者》</a><br> ·  <a href="https://news.cnblogs.com/n/584477/" target="_blank">瓜子二手车反击人人车：起诉广告不实索赔千万元</a><br> ·  <a href="https://news.cnblogs.com/n/584474/" target="_blank">戴尔第三财季净亏损9.41亿美元 同比减少43%</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/34770/" target="_blank"><img width="468" height="60" src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/24442-20171208101900738-116140477.jpg" alt="阿里云C2-1208"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/531409/" target="_blank">以操作系统的角度述说线程与进程</a><br> ·  <a href="http://kb.cnblogs.com/page/141729/" target="_blank">软件测试转型之路</a><br> ·  <a href="http://kb.cnblogs.com/page/177402/" target="_blank">门内门外看招聘</a><br> ·  <a href="http://kb.cnblogs.com/page/112506/" target="_blank">大道至简，职场上做人做事做管理</a><br> ·  <a href="http://kb.cnblogs.com/page/563790/" target="_blank">关于编程，你的练习是不是有效的？</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><a href="https://info.flagcounter.com/m5oq"><img src="./Elasticsearch之elasticsearch5.x 新特性 - 大数据躺过的坑 - 博客园_files/saved_resource" alt="Flag Counter" border="0"></a>
+
+
+
+
+<style type="text/css">
+#div1 {position:relative; width:200px; height:150px; margin: 2px auto 0; }
+#div1 a {position:absolute; top:0px; left:0px; font-family: Microsoft YaHei; color:#fff; font-weight:bold; text-decoration:none; padding: 1px 2px; }
+#div1 a:hover {border: 1px solid #eee; background: #000; }
+#div1 .blue {color:blue;}
+#div1 .red {color:red;}
+#div1 .yellow {color:yellow;}
+#div1 .green {color:green;}
+
+
+</style>
+
+
+
+
+
+<font face="Comic Sans MS"><strong><a href="http://weibo.com/u/3209909971/home?wvr=5&amp;lf=reg">欢迎您来到《大数据躺过的坑》的3D彩色云标签，让您多份关注与留念。                         微信公众号平台1： 大数据躺过的坑         微信公众号平台2 ： 免费给分享      大数据躺过的坑（总群）： 161156071              更多QQ技术分群，详情请见：http://www.cnblogs.com/zlslch/p/7473861.html       </a>
+</strong></font><hr>
+<div id="div1">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<a href="http://www.cnblogs.com/zlslch/category/966532.html" class="blue" style="left: 24.9133px; top: 112.261px; font-size: 15px; opacity: 0.78962; z-index: 1;">Hive</a><a href="http://www.cnblogs.com/zlslch/category/991047.html" class="red" style="left: 43.6773px; top: 91.0059px; font-size: 15px; opacity: 0.931558; z-index: 19;">Flume</a><a href="http://www.cnblogs.com/zlslch/category/905632.html" class="blue" style="left: 24.6648px; top: 77.4119px; font-size: 15px; opacity: 0.787807; z-index: 2;">github</a><a href="http://www.cnblogs.com/zlslch/category/938837.html" class="red" style="left: -12.0471px; top: 91.4294px; font-size: 14px; opacity: 0.61657; z-index: 3;">Azkaban\Oozie</a><a href="http://www.cnblogs.com/zlslch/category/1008268.html" class="red" style="left: 47.345px; top: 113.887px; font-size: 14px; opacity: 0.58146; z-index: 4;">Docker</a><a href="http://www.cnblogs.com/zlslch/category/1070082.html" class="blue" style="left: 74.6603px; top: 123.797px; font-size: 15px; opacity: 0.684038; z-index: 5;">Atlas</a><a href="http://www.cnblogs.com/zlslch/category/1015699.html" class="purple" style="left: 67.2149px; top: 113.619px; font-size: 15px; opacity: 0.872325; z-index: 6;">Caffe</a><a href="http://www.cnblogs.com/zlslch/category/1070082.html" class="blue" style="left: 80.3219px; top: 89.1745px; font-size: 16px; opacity: 1.03632; z-index: 7;">Chef</a><a href="http://www.cnblogs.com/zlslch/category/855767.html" class="red" style="left: 61.5074px; top: 62.8973px; font-size: 16px; opacity: 1.04924; z-index: 8;">Spark </a><a href="http://www.cnblogs.com/zlslch/category/896082.html" class="blue" style="left: 28.1704px; top: 46.4653px; font-size: 15px; opacity: 0.901385; z-index: 9;">Linux</a><a href="http://www.cnblogs.com/zlslch/category/1026557.html" class="red" style="left: 14.106px; top: 45.9303px; font-size: 15px; opacity: 0.700951; z-index: 10;">Phoenix/squirrel</a><a href="http://www.cnblogs.com/zlslch/category/906038.html" class="blue" style="left: 15.7835px; top: 60.2555px; font-size: 14px; opacity: 0.541626; z-index: 11;">MongoDB</a><a href="http://www.cnblogs.com/zlslch/category/894300.html" class="green" style="left: 42.7969px; top: 82.7458px; font-size: 14px; opacity: 0.458814; z-index: 12;">Flume</a><a href="http://www.cnblogs.com/zlslch/category/1026557.html" class="red" style="left: 73.3081px; top: 104.163px; font-size: 14px; opacity: 0.457663; z-index: 13;">Phoenix/squirrel</a><a href="http://www.cnblogs.com/zlslch/category/1043661.html" class="red" style="left: 64.6389px; top: 116.183px; font-size: 14px; opacity: 0.534962; z-index: 14;">kafka</a><a href="http://www.cnblogs.com/zlslch/category/923263.html" class="red" style="left: 106.92px; top: 114.099px; font-size: 15px; opacity: 0.680749; z-index: 15;">HDFS</a><a href="http://www.cnblogs.com/zlslch/category/1088999.html" class="red" style="left: 79.2909px; top: 98.0787px; font-size: 15px; opacity: 0.864198; z-index: 16;">Beam</a><a href="http://www.cnblogs.com/zlslch/category/996971.html" class="green" style="left: 107.925px; top: 72.8283px; font-size: 16px; opacity: 1.01692; z-index: 17;">Pig</a><a href="http://www.cnblogs.com/zlslch/category/996029.html" class="green" style="left: 84.087px; top: 45.9111px; font-size: 16px; opacity: 1.0539; z-index: 18;">Excel数据挖掘</a><a href="http://www.cnblogs.com/zlslch/category/1088710.html" class="green" style="left: 60.8172px; top: 25.3066px; font-size: 16px; opacity: 0.94888; z-index: 0;">Kudu</a><a href="http://www.cnblogs.com/zlslch/category/908200.html" class="red" style="left: 41.1892px; top: 16.9347px; font-size: 15px; opacity: 0.764232; z-index: 20;">Lucene/solr</a><a href="http://www.cnblogs.com/zlslch/category/851447.html" class="red" style="left: 39.8048px; top: 22.8356px; font-size: 14px; opacity: 0.58332; z-index: 21;">Hadoop源码解读</a><a href="http://www.cnblogs.com/zlslch/category/922245.html" class="purple" style="left: 35.7268px; top: 40.5091px; font-size: 14px; opacity: 0.454861; z-index: 22;">Hadoop</a><a href="http://www.cnblogs.com/zlslch/category/950999.html" class="brown" style="left: 71.4444px; top: 63.6148px; font-size: 14px; opacity: 0.395365; z-index: 23;">ELK</a><a href="http://www.cnblogs.com/zlslch/category/906039.html" class="green" style="left: 79.7066px; top: 83.8794px; font-size: 14px; opacity: 0.40779; z-index: 24;">Cassandra</a><a href="http://www.cnblogs.com/zlslch/category/906044.html" class="blue" style="left: 76.7108px; top: 93.7223px; font-size: 14px; opacity: 0.490547; z-index: 25;">Redis</a><a href="http://www.cnblogs.com/zlslch/category/1008607.html" class="blue" style="left: 131.251px; top: 88.863px; font-size: 14px; opacity: 0.63283; z-index: 26;">Kettle</a><a href="http://www.cnblogs.com/zlslch/category/996973.html" class="brown" style="left: 134.604px; top: 70.0833px; font-size: 15px; opacity: 0.796668; z-index: 27;">Avro</a><a href="http://www.cnblogs.com/zlslch/category/1008607.html" class="blue" style="left: 120.734px; top: 43.4359px; font-size: 15px; opacity: 0.90352; z-index: 28;">Kettle</a><a href="http://www.cnblogs.com/zlslch/category/922226.html" class="blue" style="left: 74.9223px; top: 18.5322px; font-size: 15px; opacity: 0.877591; z-index: 29;">MapReduce</a><a href="http://www.cnblogs.com/zlslch/category/993482.html" class="purple" style="left: 71.7232px; top: 5.09915px; font-size: 15px; opacity: 0.732264; z-index: 30;">Impala</a><a href="http://www.cnblogs.com/zlslch/category/898775.html" class="purple " style="left: 49.7443px; top: 8.69414px; font-size: 14px; opacity: 0.559432; z-index: 31;">Maven</a><a href="http://www.cnblogs.com/zlslch/category/996966.html" class="red" style="left: 73.6332px; top: 27.1569px; font-size: 14px; opacity: 0.439691; z-index: 32;">Hue</a><a href="http://www.cnblogs.com/zlslch/category/895833.html" class="red" style="left: 57.1567px; top: 49.8382px; font-size: 14px; opacity: 0.411111; z-index: 33;">Google改变生活</a><a href="http://www.cnblogs.com/zlslch/category/984004.html" class="green" style="left: 119.137px; top: 61.4995px; font-size: 14px; opacity: 0.483508; z-index: 34;">python</a><a href="http://www.cnblogs.com/zlslch/category/898774.html" class="blue" style="left: 136.205px; top: 51.482px; font-size: 14px; opacity: 0.626308; z-index: 35;">IDEA</a><a href="http://www.cnblogs.com/zlslch/category/827375.html" class="brown" style="left: 121.297px; top: 25.4531px; font-size: 15px; opacity: 0.711697; z-index: 36;">HBase</a><a href="http://www.cnblogs.com/zlslch/category/1019140.html" class="green" style="left: 60.1566px; top: 10.2034px; font-size: 14px; opacity: 0.607393; z-index: 37;">ECharts</a><a href="http://www.cnblogs.com/zlslch/category/905365.html" class="red" style="left: 109.532px; top: 27.4526px; font-size: 14px; opacity: 0.498071; z-index: 38;">Mahout</a></div><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/zlslch/">大数据躺过的坑</a><br>园龄：<a href="http://home.cnblogs.com/u/zlslch/" title="入园时间：2015-12-12">1年11个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/zlslch/followers/">280</a><br>关注：<a href="http://home.cnblogs.com/u/zlslch/followees/">28</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;6b1fa008-a2a0-e511-9fc1-ac853d9f53cc&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/11/01&#39;);return false;">&lt;</a></td><td align="center">2017年12月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/01/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">26</td><td class="CalOtherMonthDay" align="center">27</td><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td align="center"><a href="http://www.cnblogs.com/zlslch/archive/2017/12/01.html"><u>1</u></a></td><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/zlslch/archive/2017/12/02.html"><u>2</u></a></td></tr><tr><td class="CalWeekendDay" align="center">3</td><td align="center"><a href="http://www.cnblogs.com/zlslch/archive/2017/12/04.html"><u>4</u></a></td><td align="center"><a href="http://www.cnblogs.com/zlslch/archive/2017/12/05.html"><u>5</u></a></td><td align="center"><a href="http://www.cnblogs.com/zlslch/archive/2017/12/06.html"><u>6</u></a></td><td align="center">7</td><td class="CalTodayDay" align="center">8</td><td class="CalWeekendDay" align="center">9</td></tr><tr><td class="CalWeekendDay" align="center">10</td><td align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td class="CalWeekendDay" align="center">16</td></tr><tr><td class="CalWeekendDay" align="center">17</td><td align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td class="CalWeekendDay" align="center">23</td></tr><tr><td class="CalWeekendDay" align="center">24</td><td align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td class="CalWeekendDay" align="center">30</td></tr><tr><td class="CalWeekendDay" align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/zlslch/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/zlslch/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/zlslch/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/zlslch/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/zlslch/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block"></div><div id="sidebar_categories">
+<div id="sidebar_postcategory" class="catListPostCategory sidebar-block">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/zlslch/category/1070082.html">Apache Atlas（Hadoop的元数据治理）(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/zlslch/category/938837.html">Azkaban（第三方工作流）与Oozie（Hadoop内置工作流）、hadoop工作流（概念学习和搭建系列）(32)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/zlslch/category/1088999.html">Beam（一个开源的统一的分布式数据处理编程库）(18)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/zlslch/category/965564.html">BigData各子项目集群的详细启动步骤（1、3、5节点）(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/zlslch/category/1015699.html">Caffe(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/zlslch/category/906039.html">Cassandra概念学习系列(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/zlslch/category/980687.html">Chef(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/zlslch/category/996966.html">Cloudera Hue（可视化分析利器）的概念学习系列和部署搭建(25)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/zlslch/category/993482.html">Cloudera Impala(15)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_9" href="http://www.cnblogs.com/zlslch/category/1008268.html">Docker(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_10" href="http://www.cnblogs.com/zlslch/category/1019140.html">ECharts</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_11" href="http://www.cnblogs.com/zlslch/category/898774.html">Eclipse/ MyEclipse / Scala IDE for Eclipse / IntelliJ IDEA / JetBrains PyCharm(65)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_12" href="http://www.cnblogs.com/zlslch/category/953123.html">Elasticsearch 编程API入门系列(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_13" href="http://www.cnblogs.com/zlslch/category/950999.html">ELK（Elasticsearch/Logstash/Kibana）概念学习系列(59)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_14" href="http://www.cnblogs.com/zlslch/category/972313.html">ELK(Elasticsearch/Logstash/Kibana)集群搭建(27)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_15" href="http://www.cnblogs.com/zlslch/category/996029.html">Excel 2013 中数据挖掘(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_16" href="http://www.cnblogs.com/zlslch/category/905632.html">Github / Git /  TortoiseGit  / CVS / SVN(30)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_17" href="http://www.cnblogs.com/zlslch/category/895833.html">Google改变生活(18)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_18" href="http://www.cnblogs.com/zlslch/category/996973.html">Hadoop Avro概念学习系列和部署搭建(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_19" href="http://www.cnblogs.com/zlslch/category/991047.html">Hadoop Flume概念学习系列(25)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_20" href="http://www.cnblogs.com/zlslch/category/894300.html">Hadoop Flume集群搭建(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_21" href="http://www.cnblogs.com/zlslch/category/922164.html">Hadoop HBase编程 API入门系列(11)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_22" href="http://www.cnblogs.com/zlslch/category/922188.html">Hadoop HBase概念学习系列(31)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_23" href="http://www.cnblogs.com/zlslch/category/827375.html">Hadoop HBase集群搭建与开发环境(19)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_24" href="http://www.cnblogs.com/zlslch/category/923281.html">Hadoop HDFS编程 API入门系列(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_25" href="http://www.cnblogs.com/zlslch/category/923263.html">Hadoop HDFS概念学习系列(31)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_26" href="http://www.cnblogs.com/zlslch/category/966532.html">Hadoop Hive编程 API入门系列(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_27" href="http://www.cnblogs.com/zlslch/category/922212.html">Hadoop Hive概念学习系列(36)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_28" href="http://www.cnblogs.com/zlslch/category/965666.html">Hadoop Hive集群搭建（含CentOS和Ubuntu）(11)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_29" href="http://www.cnblogs.com/zlslch/category/905365.html">Hadoop Mahout概念学习系列(23)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_30" href="http://www.cnblogs.com/zlslch/category/922340.html">Hadoop MapReduce编程 API入门系列(38)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_31" href="http://www.cnblogs.com/zlslch/category/823088.html">Hadoop Mapreduce编程环境搭建(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_32" href="http://www.cnblogs.com/zlslch/category/922226.html">Hadoop MapReduce概念学习系列(26)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_33" href="http://www.cnblogs.com/zlslch/category/996971.html">Hadoop Pig概念学习系列和部署搭建(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_34" href="http://www.cnblogs.com/zlslch/category/823081.html">Hadoop shell  (4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_35" href="http://www.cnblogs.com/zlslch/category/823090.html">Hadoop YARN</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_36" href="http://www.cnblogs.com/zlslch/category/922245.html">Hadoop 概念学习系列(55)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_37" href="http://www.cnblogs.com/zlslch/category/851447.html">Hadoop 源码解读(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_38" href="http://www.cnblogs.com/zlslch/category/1068010.html">Hadoop+Spark大数据巨量分析与机器学习整合开发实战 书籍</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_39" href="http://www.cnblogs.com/zlslch/category/913076.html">Hadoop集群搭建（1、3和5节点）（包含Apache Hadoop和CDH版本）(24)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_40" href="http://www.cnblogs.com/zlslch/category/898795.html">Jdk / Java(29)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_41" href="http://www.cnblogs.com/zlslch/category/1043661.html">kafka编程入门API系列(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_42" href="http://www.cnblogs.com/zlslch/category/991305.html">kafka概念学习系列(42)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_43" href="http://www.cnblogs.com/zlslch/category/1043659.html">kafka集群搭建(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_44" href="http://www.cnblogs.com/zlslch/category/1088710.html">Kudu（一款介于hdfs和hbase之间的高速分布式列式存储数据库）(19)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_45" href="http://www.cnblogs.com/zlslch/category/896082.html">Linux概念学习与操作系统（含CentOS和Ubuntu）(116)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_46" href="http://www.cnblogs.com/zlslch/category/908200.html">Lucene / solr 概念学习系列(11)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_47" href="http://www.cnblogs.com/zlslch/category/898775.html">Maven构建项目与概念学习系列(32)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_48" href="http://www.cnblogs.com/zlslch/category/906038.html">MongoDB概念学习系列(17)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_49" href="http://www.cnblogs.com/zlslch/category/1015703.html">Mxnet(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_50" href="http://www.cnblogs.com/zlslch/category/896180.html">MySQL概念学习系列(41)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_51" href="http://www.cnblogs.com/zlslch/category/962962.html">MySQL概念学习与逐步上手操作系列（一套完整）(52)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_52" href="http://www.cnblogs.com/zlslch/category/972698.html">Nagios概念学习系列(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_53" href="http://www.cnblogs.com/zlslch/category/906047.html">Neo4j概念学习系列(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_54" href="http://www.cnblogs.com/zlslch/category/905094.html">Nginx / Tengine(21)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_55" href="http://www.cnblogs.com/zlslch/category/1008607.html">Pentaho Kettle(14)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_56" href="http://www.cnblogs.com/zlslch/category/1026557.html">Phoenix（HBase的开源SQL引擎）与squirrel(windows上Phoneix可视化工具)(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_57" href="http://www.cnblogs.com/zlslch/category/984004.html">python学习路线(12)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_58" href="http://www.cnblogs.com/zlslch/category/906044.html">Redis概念学习系列(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_59" href="http://www.cnblogs.com/zlslch/category/906058.html">RHive概念学习系列(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_60" href="http://www.cnblogs.com/zlslch/category/906049.html">RMySQL概念学习系列(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_61" href="http://www.cnblogs.com/zlslch/category/898544.html">shell(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_62" href="http://www.cnblogs.com/zlslch/category/861383.html">Spark  MLI (1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_63" href="http://www.cnblogs.com/zlslch/category/993484.html">Spark  MLlib编程入门系列(40)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_64" href="http://www.cnblogs.com/zlslch/category/993483.html">Spark  MLlib概念学习系列(11)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_65" href="http://www.cnblogs.com/zlslch/category/873278.html">Spark  Scala语言学习系列(10)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_66" href="http://www.cnblogs.com/zlslch/category/905997.html">Spark DataFrame(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_67" href="http://www.cnblogs.com/zlslch/category/858486.html">Spark GraphX概念学习系列(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_68" href="http://www.cnblogs.com/zlslch/category/861104.html">Spark MLbase概念学习系列(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_69" href="http://www.cnblogs.com/zlslch/category/1068009.html">Spark Mllib机器学习实战 书籍</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_70" href="http://www.cnblogs.com/zlslch/category/859944.html">Spark RDD/Core 编程 API入门系列(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_71" href="http://www.cnblogs.com/zlslch/category/924363.html">Spark RDD/Core概念学习系列(35)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_72" href="http://www.cnblogs.com/zlslch/category/880838.html">Spark R概念学习系列(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_73" href="http://www.cnblogs.com/zlslch/category/1013348.html">Spark Shell(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_74" href="http://www.cnblogs.com/zlslch/category/982094.html">Spark SQL 编程API入门系列(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_75" href="http://www.cnblogs.com/zlslch/category/924382.html">Spark SQL概念学习系列(25)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_76" href="http://www.cnblogs.com/zlslch/category/980764.html">Spark Streaming 编程API入门系列</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_77" href="http://www.cnblogs.com/zlslch/category/858485.html">Spark Streaming概念学习系列(14)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_78" href="http://www.cnblogs.com/zlslch/category/860082.html">Spark Submit(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_79" href="http://www.cnblogs.com/zlslch/category/860978.html">Spark Tachyon概念学习系列(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_80" href="http://www.cnblogs.com/zlslch/category/855767.html">Spark 概念学习系列(37)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_81" href="http://www.cnblogs.com/zlslch/category/860046.html">Spark 源码解读(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_82" href="http://www.cnblogs.com/zlslch/category/1069240.html">spark-2.2.0-bin-hadoop2.6和spark-1.6.1-bin-hadoop2.6发行包自带案例全面详解（java、python、r和scala）(7)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_83" href="http://www.cnblogs.com/zlslch/category/913079.html">Spark集群搭建（1、3和5节点）（含CentOS系统和Ubuntu系统）(32)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_84" href="http://www.cnblogs.com/zlslch/category/916409.html">Sqoop概念学习系列(16)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_85" href="http://www.cnblogs.com/zlslch/category/967221.html">Sqoop集群搭建(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_86" href="http://www.cnblogs.com/zlslch/category/1043770.html">Storm编程入门API系列(10)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_87" href="http://www.cnblogs.com/zlslch/category/894299.html">Storm概念学习系列(26)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_88" href="http://www.cnblogs.com/zlslch/category/1006078.html">Storm集群搭建(7)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_89" href="http://www.cnblogs.com/zlslch/category/1125924.html">Tableau（一款BI报表工具）(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_90" href="http://www.cnblogs.com/zlslch/category/1015698.html">Tensorflow(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_91" href="http://www.cnblogs.com/zlslch/category/952279.html">Tomcat概念学习与操作系列(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_92" href="http://www.cnblogs.com/zlslch/category/1015702.html">Torch(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_93" href="http://www.cnblogs.com/zlslch/category/884897.html">weekend110（Hadoop、MapReduce、Zookeeper、Hive、HBase、flume、sqoop、kafka）(39)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_94" href="http://www.cnblogs.com/zlslch/category/999872.html">Weka中数据挖掘与机器学习(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_95" href="http://www.cnblogs.com/zlslch/category/912337.html">windows实用网络(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_96" href="http://www.cnblogs.com/zlslch/category/1014038.html">Zeppelin(9)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_97" href="http://www.cnblogs.com/zlslch/category/1043131.html">zookeeper编程入门系列(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_98" href="http://www.cnblogs.com/zlslch/category/903878.html">Zookeeper概念学习系列(11)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_99" href="http://www.cnblogs.com/zlslch/category/1043063.html">Zookeeper集群搭建(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_100" href="http://www.cnblogs.com/zlslch/category/823067.html">博客园第几笔(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_101" href="http://www.cnblogs.com/zlslch/category/894327.html">大牛博客(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_102" href="http://www.cnblogs.com/zlslch/category/916378.html">大数据平台搭建、管理、监控利器（Ambari和Cloudera Manger）(69)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_103" href="http://www.cnblogs.com/zlslch/category/1063095.html">分布式大数据多维分析（OLAP）引擎Kylin(7)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_104" href="http://www.cnblogs.com/zlslch/category/954077.html">分词器/倒排索引/搜索引擎概念学习系列(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_105" href="http://www.cnblogs.com/zlslch/category/1072253.html">个人微信公众号(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_106" href="http://www.cnblogs.com/zlslch/category/1016089.html">机器学习/深度学习(55)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_107" href="http://www.cnblogs.com/zlslch/category/900453.html">局域网 / 计算机网络(49)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_108" href="http://www.cnblogs.com/zlslch/category/1064267.html">牛客网Java笔试面试刷题(63)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_109" href="http://www.cnblogs.com/zlslch/category/936406.html">爬虫(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_110" href="http://www.cnblogs.com/zlslch/category/880830.html">实用软件汇总与操作技巧(77)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_111" href="http://www.cnblogs.com/zlslch/category/1053437.html">网络安全攻防(89)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_112" href="http://www.cnblogs.com/zlslch/category/769443.html">心灵鸡汤(4)</a> </li>
+
+</ul>
+
+</div>
+
+<div id="sidebar_postarchive" class="catListPostArchive sidebar-block">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/zlslch/archive/2017/12.html">2017年12月 (43)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/zlslch/archive/2017/11.html">2017年11月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/zlslch/archive/2017/10.html">2017年10月 (27)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/zlslch/archive/2017/09.html">2017年9月 (139)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/zlslch/archive/2017/08.html">2017年8月 (121)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/zlslch/archive/2017/07.html">2017年7月 (80)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/zlslch/archive/2017/06.html">2017年6月 (139)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/zlslch/archive/2017/05.html">2017年5月 (127)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/zlslch/archive/2017/04.html">2017年4月 (138)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/zlslch/archive/2017/03.html">2017年3月 (155)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/zlslch/archive/2017/02.html">2017年2月 (56)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/zlslch/archive/2017/01.html">2017年1月 (24)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_12" href="http://www.cnblogs.com/zlslch/archive/2016/12.html">2016年12月 (107)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_13" href="http://www.cnblogs.com/zlslch/archive/2016/11.html">2016年11月 (193)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_14" href="http://www.cnblogs.com/zlslch/archive/2016/10.html">2016年10月 (161)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_15" href="http://www.cnblogs.com/zlslch/archive/2016/09.html">2016年9月 (104)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_16" href="http://www.cnblogs.com/zlslch/archive/2016/08.html">2016年8月 (35)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_17" href="http://www.cnblogs.com/zlslch/archive/2016/07.html">2016年7月 (102)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_18" href="http://www.cnblogs.com/zlslch/archive/2016/06.html">2016年6月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_19" href="http://www.cnblogs.com/zlslch/archive/2016/05.html">2016年5月 (9)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_20" href="http://www.cnblogs.com/zlslch/archive/2016/04.html">2016年4月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_21" href="http://www.cnblogs.com/zlslch/archive/2016/03.html">2016年3月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_22" href="http://www.cnblogs.com/zlslch/archive/2016/02.html">2016年2月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_23" href="http://www.cnblogs.com/zlslch/archive/2016/01.html">2016年1月 (9)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_24" href="http://www.cnblogs.com/zlslch/archive/2015/12.html">2015年12月 (60)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zlslch/p/6964944.html#3856435">1. Re:Windows7 64bits下安装TensorFlow CPU版本（图文详解）</a></li>
+        <li class="recent_comment_body">@咸鱼翻身你好，现在在win下很好安装tensorflow环境了。不支持anaconda2，支持anaconda3第一步：先安装anaconda3第二步：pip install --upgrade -......</li>
+        <li class="recent_comment_author">--大数据躺过的坑</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zlslch/p/6819622.html#3854399">2. Re:安装Hue后的一些功能的问题解决干货总结（博主推荐）</a></li>
+        <li class="recent_comment_body">@月饼馅饺子不客气，加油哦，一起交流。欢迎您的加入！ 微信公众号平台： 大数据躺过的坑大数据躺过的坑（总群）： 161156071 更多QQ技术分群，详情请见：...</li>
+        <li class="recent_comment_author">--大数据躺过的坑</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zlslch/p/6819622.html#3854305">3. Re:安装Hue后的一些功能的问题解决干货总结（博主推荐）</a></li>
+        <li class="recent_comment_body">解决了，谢谢。</li>
+        <li class="recent_comment_author">--月饼馅饺子</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zlslch/p/6819622.html#3842325">4. Re:安装Hue后的一些功能的问题解决干货总结（博主推荐）</a></li>
+        <li class="recent_comment_body">@月饼馅饺子你的问题解决了吗？...</li>
+        <li class="recent_comment_author">--大数据躺过的坑</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/zlslch/p/6819622.html#3842323">5. Re:安装Hue后的一些功能的问题解决干货总结（博主推荐）</a></li>
+        <li class="recent_comment_body">厉害，在官网找了好久没看到怎么初始化数据库。真是服了这个官网，啥都没有。</li>
+        <li class="recent_comment_author">--月饼馅饺子</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/zlslch/p/6428348.html">1. Server Tomcat v7.0 Server at localhost failed to start.解决办法(17653)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/5723857.html">2. Spark RDD概念学习系列之Spark的算子的分类（十一）(15623)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6984403.html">3. Windows下的Jupyter Notebook 安装与自定义启动（图文详解）(15096)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6034802.html">4. 亿图图示专家的下载、安装和注册激活（图文详细教程）(13001)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6619089.html">5. Elasticsearch之elasticsearch5.x 新特性(12831)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/zlslch/p/6034802.html">1. 亿图图示专家的下载、安装和注册激活（图文详细教程）(9)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6819622.html">2. 安装Hue后的一些功能的问题解决干货总结（博主推荐）(6)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6441315.html">3. Elasticsearch之中文分词器插件es-ik的自定义热更新词库(5)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/5881893.html">4. 使用 IntelliJ IDEA 导入 Spark 最新源码及编译 Spark 源代码（博主强烈推荐）(4)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/5723857.html">5. Spark RDD概念学习系列之Spark的算子的分类（十一）(3)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/zlslch/p/5723857.html">1. Spark RDD概念学习系列之Spark的算子的分类（十一）(3)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6819622.html">2. 安装Hue后的一些功能的问题解决干货总结（博主推荐）(2)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6760766.html">3. flume的两层搭建：采集层和聚合层进一步深入（包含flume在单台、两台、三台和多台上的部署）（博主推荐）(2)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6622079.html">4. filebeat.yml（中文配置详解）(2)</a></li><li><a href="http://www.cnblogs.com/zlslch/p/6619089.html">5. Elasticsearch之elasticsearch5.x 新特性(2)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 大数据躺过的坑
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>
